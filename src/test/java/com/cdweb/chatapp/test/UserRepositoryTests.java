@@ -2,7 +2,9 @@ package com.cdweb.chatapp.test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.cdweb.chatapp.Repository.TestModelRepository;
 import com.cdweb.chatapp.Repository.UserRepository;
+import com.cdweb.chatapp.model.TestModel;
 import com.cdweb.chatapp.model.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,9 @@ public class UserRepositoryTests {
     @Autowired
     private UserRepository repo;
 
+    @Autowired
+    private TestModelRepository testModelRepository;
+
     @Test
     public void testCreateUser() {
         User user = new User();
@@ -34,6 +39,22 @@ public class UserRepositoryTests {
         User existUser = entityManager.find(User.class, savedUser.getId());
 
         assertThat(user.getEmail()).isEqualTo(existUser.getEmail());
+
+    }
+
+    @Test
+    public void testModel() {
+        TestModel t = new TestModel();
+
+        t.setName("Phi");
+
+
+
+        TestModel t1 = testModelRepository.save(t);
+
+        TestModel existTest = entityManager.find(TestModel.class, t1.getId());
+
+        assertThat(t1.getName()).isEqualTo(existTest.getName());
 
     }
 }
