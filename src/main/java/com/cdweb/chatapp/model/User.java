@@ -6,7 +6,10 @@ import org.springframework.stereotype.Component;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Set;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -35,8 +38,11 @@ public class User {
     private String avatarUrl;
     @Column()
     private String desc;
-
+//    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Role role;
+    private String role;
+//@OneToMany(mappedBy = "user")
+//    @Column
+//    private Set<Message> messages;
 }
+

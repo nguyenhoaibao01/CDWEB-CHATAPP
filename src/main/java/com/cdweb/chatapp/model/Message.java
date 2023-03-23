@@ -18,14 +18,12 @@ public class Message {
 //    @Id
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
-//    @Column(name = "sender_id")
-//    @OneToOne(cascade = CascadeType.ALL)
-//    @JoinColumn(name = "sender_id", referencedColumnName = "id")
-    private User sender; // in database, this field is senderId with type String
-//    @Column(name = "receiver_id")
-//    @OneToOne(cascade = CascadeType.ALL)
-//    @JoinColumn(name = "sender_id", referencedColumnName = "id")
-    private User receiver;
+    //    @Column(name = "sender_id")
+//    @ManyToOne()
+//    @JoinColumn(name = "sender_id")
+    private User sender;
+//    @Column
+    private int room;
 //    @Column
     private LocalDateTime sendAt;
 //    @Column

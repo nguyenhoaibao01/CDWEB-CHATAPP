@@ -5,6 +5,8 @@ import com.cdweb.chatapp.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserService{
     @Autowired
@@ -12,5 +14,8 @@ public class UserService{
 
     public User addNewUser(User newUser) {
         return userRepository.save(newUser);
+    }
+    public List<User> getAllUser() {
+        return userRepository.findAll();
     }
 }
