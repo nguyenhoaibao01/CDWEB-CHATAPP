@@ -28,11 +28,12 @@ public class SecurityConfig {
         return http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/register").permitAll()
+                        .requestMatchers("/","/register").permitAll()
                         .requestMatchers("/login").permitAll()
                         .anyRequest().authenticated()
-
                 )
+                .formLogin().defaultSuccessUrl("/user",true)
+                .and()
                 .userDetailsService(customUserDetailsService)
                 .httpBasic(Customizer.withDefaults())
                 .build();

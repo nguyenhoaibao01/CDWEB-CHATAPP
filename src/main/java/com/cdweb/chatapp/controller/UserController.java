@@ -8,6 +8,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class UserController {
@@ -18,25 +19,31 @@ public class UserController {
     public String hello(){
         return "home page";
     }
-    @PreAuthorize("hasAnyAuthority('USER')")
+
     @GetMapping("/user")
+//    @PreAuthorize("hasAuthority('ROLE_USER')")
     public String helloUser(){
         return "Hello user";
     }
 
     @PostMapping("/register")
     public String addNewUser(@RequestBody User newUser) {
+        Optional<User>  exist = userService.findByEmail(newUser.getEmail());
+        if(!exist.isEmpty()) return "Email nay da ton tai!";
         BCryptPasswordEncoder pwEncoder = new BCryptPasswordEncoder();
         String pwEncoded = pwEncoder.encode(newUser.getPassword());
         newUser.setPassword(pwEncoded);
          userService.addNewUser(newUser);
-        return "hello";
+        return "Ban da dang ky thanh cong!";
     }
 
-
-    @GetMapping("/getUser")
+    @GetMapping("/getAllUsers")
     public List<User> getAllUsers() {
         return userService.getAllUser();
     }
 
+    @PostMapping("/getUser/{id}")
+    public Optional<User> getUser(@PathVariable String id) {
+        return userService.findById(Long.parseLong(id));
+    }
 }
