@@ -2,10 +2,13 @@ package com.cdweb.chatapp.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.stereotype.Component;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -14,7 +17,7 @@ import java.util.Date;
 @ToString
 @Builder
 @Entity
-@Table(name="users")
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,4 +38,11 @@ public class User {
     private String avatarUrl;
     @Column()
     private String desc;
+//    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private String role;
+//@OneToMany(mappedBy = "user")
+//    @Column
+//    private Set<Message> messages;
 }
+

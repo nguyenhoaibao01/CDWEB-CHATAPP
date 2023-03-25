@@ -1,41 +1,49 @@
 package com.cdweb.chatapp.controller;
 
-import com.cdweb.chatapp.Repository.UserRepository;
 import com.cdweb.chatapp.model.User;
+import com.cdweb.chatapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
-@Controller
+@RestController
 public class UserController {
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
-    @GetMapping("")
-    public String loginPage() {
-        return "login";
-
+    @GetMapping("/")
+    public String hello(){
+        return "home page";
     }
 
-    @GetMapping("/register")
-    public User addNewUser(@RequestBody User newUser) {
-        return userRepository.save(newUser);
+    @GetMapping("/user")
+//    @PreAuthorize("hasAuthority('ROLE_USER')")
+    public String helloUser(){
+        return "Hello user";
     }
 
-    @PostMapping("process-register")
-    public String register(User user) {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        String encoded = passwordEncoder.encode((user.getPassword()));
-        user.setPassword(encoded);
-        userRepository.save(user);
-        return "";
+    @PostMapping("/register")
+    public String addNewUser(@RequestBody User newUser) {
+        Optional<User>  exist = userService.findByEmail(newUser.getEmail());
+        if(!exist.isEmpty()) return "Email nay da ton tai!";
+        BCryptPasswordEncoder pwEncoder = new BCryptPasswordEncoder();
+        String pwEncoded = pwEncoder.encode(newUser.getPassword());
+        newUser.setPassword(pwEncoded);
+         userService.addNewUser(newUser);
+        return "Ban da dang ky thanh cong!";
     }
 
+    @GetMapping("/getAllUsers")
+    public List<User> getAllUsers() {
+        return userService.getAllUser();
+    }
 
+    @PostMapping("/getUser/{id}")
+    public Optional<User> getUser(@PathVariable String id) {
+        return userService.findById(Long.parseLong(id));
+    }
 }
