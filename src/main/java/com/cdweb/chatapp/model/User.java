@@ -41,6 +41,10 @@ public class User {
 //    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private String role;
+    @Column()
+    private String verificationCode;
+    @Column(nullable = false)
+    private boolean enable;
 //@OneToMany(mappedBy = "user")
 //    @Column
 //    private Set<Message> messages;
