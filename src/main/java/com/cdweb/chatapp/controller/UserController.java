@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,8 +28,13 @@ public class UserController {
     }
 
     @GetMapping("/user")
-    public String helloUser() {
-        return "Hello user";
+    public String helloUser(Authentication auth) {
+        return auth.getName();
+    }
+
+    @GetMapping("/user/hello")
+    public String helloUser2(Authentication auth) {
+        return auth.getName() +"hello";
     }
 
     @GetMapping("/register")

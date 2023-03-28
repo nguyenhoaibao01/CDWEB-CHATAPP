@@ -5,6 +5,7 @@ import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -12,22 +13,21 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @ToString
 @Builder
-//@Entity
-//@Table(name = "messages")
+@Entity
+@Table(name = "messages")
 public class Message {
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
-    //    @Column(name = "sender_id")
-//    @ManyToOne()
-//    @JoinColumn(name = "sender_id")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+    @ManyToOne()
     private User sender;
-//    @Column
-    private int room;
-//    @Column
-    private LocalDateTime sendAt;
-//    @Column
+    @ManyToOne()
+    private Room room;
+    @Column
+    private LocalDateTime sendAt=LocalDateTime.now();
+    @Column
     private String content;
+
 
 
 }

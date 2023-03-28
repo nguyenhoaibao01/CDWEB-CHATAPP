@@ -2,12 +2,9 @@ package com.cdweb.chatapp.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.stereotype.Component;
 
-import javax.swing.*;
-import java.awt.*;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -38,15 +35,19 @@ public class User {
     private String avatarUrl;
     @Column()
     private String desc;
-//    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private String role;
     @Column()
     private String verificationCode;
     @Column(nullable = false)
     private boolean enable;
-//@OneToMany(mappedBy = "user")
-//    @Column
-//    private Set<Message> messages;
+    @OneToMany(mappedBy = "sender")
+    private Set<Message> messages;
+
+    @OneToMany(mappedBy = "admin")
+    private Set<Room> room;
+
+    @ManyToMany(mappedBy = "members")
+    private Set<Room> rooms= new HashSet<>();
 }
 
