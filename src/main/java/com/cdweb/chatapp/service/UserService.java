@@ -25,7 +25,7 @@ public class UserService {
     @Autowired
     private JavaMailSender mailSender;
 
-    public List<User> getAllUser() {
+    public List<User> findAll() {
         return userRepository.findAll();
     }
 
@@ -69,6 +69,7 @@ public class UserService {
         String randomCode = RandomString.make(100);
         newUser.setVerificationCode(randomCode);
         newUser.setEnable(false);
+        newUser.setRole("ROLE_USER");
 
         userRepository.save(newUser);
         senderVerificationEmail(newUser, siteURL);

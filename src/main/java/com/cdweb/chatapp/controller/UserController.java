@@ -22,19 +22,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/")
-    public String hello() {
-        return "home page";
-    }
-
     @GetMapping("/user")
     public String helloUser(Authentication auth) {
         return auth.getName();
-    }
-
-    @GetMapping("/user/hello")
-    public String helloUser2(Authentication auth) {
-        return auth.getName() +"hello";
     }
 
     @GetMapping("/register")
@@ -47,12 +37,12 @@ public class UserController {
         return siteURL.replace(request.getServletPath(), "");
     }
 
-    @GetMapping("/getAllUsers")
+    @GetMapping("/users/all")
     public List<User> getAllUsers() {
-        return userService.getAllUser();
+        return userService.findAll();
     }
 
-    @PostMapping("/getUser/{id}")
+    @GetMapping("/users/{id}")
     public Optional<User> getUser(@PathVariable String id) {
         return userService.findById(Long.parseLong(id));
     }
