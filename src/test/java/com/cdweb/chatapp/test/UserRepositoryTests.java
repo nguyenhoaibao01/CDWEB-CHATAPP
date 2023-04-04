@@ -2,9 +2,7 @@ package com.cdweb.chatapp.test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.cdweb.chatapp.Repository.TestModelRepository;
 import com.cdweb.chatapp.Repository.UserRepository;
-import com.cdweb.chatapp.model.TestModel;
 import com.cdweb.chatapp.model.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

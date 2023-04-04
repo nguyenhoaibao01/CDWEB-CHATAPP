@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,14 +22,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/")
-    public String hello() {
-        return "home page";
-    }
-
     @GetMapping("/user")
-    public String helloUser() {
-        return "Hello user";
+    public String helloUser(Authentication auth) {
+        return auth.getName();
     }
 
     @GetMapping("/register")
@@ -41,12 +37,12 @@ public class UserController {
         return siteURL.replace(request.getServletPath(), "");
     }
 
-    @GetMapping("/getAllUsers")
+    @GetMapping("/users/all")
     public List<User> getAllUsers() {
-        return userService.getAllUser();
+        return userService.findAll();
     }
 
-    @PostMapping("/getUser/{id}")
+    @GetMapping("/users/{id}")
     public Optional<User> getUser(@PathVariable String id) {
         return userService.findById(Long.parseLong(id));
     }
