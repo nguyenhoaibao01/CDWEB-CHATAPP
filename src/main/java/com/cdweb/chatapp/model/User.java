@@ -2,10 +2,11 @@ package com.cdweb.chatapp.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 @Setter
@@ -15,7 +16,7 @@ import java.util.Set;
 @Builder
 @Entity
 @Table(name = "users")
-public class User {
+public class User  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -35,6 +36,8 @@ public class User {
     private String avatarUrl;
     @Column()
     private String desc;
+    @Column()
+    private String token;
     @Column(nullable = false)
     private String role;
     @Column()
@@ -49,5 +52,7 @@ public class User {
 
     @ManyToMany(mappedBy = "members")
     private Set<Room> rooms= new HashSet<>();
+
+
 }
 

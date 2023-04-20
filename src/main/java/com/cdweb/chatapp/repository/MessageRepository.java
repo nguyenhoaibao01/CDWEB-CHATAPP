@@ -1,4 +1,4 @@
-package com.cdweb.chatapp.Repository;
+package com.cdweb.chatapp.repository;
 
 import com.cdweb.chatapp.model.Message;
 import org.springframework.data.jpa.repository.JpaRepository;
