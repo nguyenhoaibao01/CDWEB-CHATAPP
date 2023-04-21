@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="e6c91c25-e984-4318-993c-c95911232d03" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.mvn/wrapper/maven-wrapper.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/.mvn/wrapper/maven-wrapper.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/mvnw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/mvnw.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/src/main/java/com/cdweb/chatapp/ChatAppApplication.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/src/main/java/com/cdweb/chatapp/DTO/LoginDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/src/main/java/com/cdweb/chatapp/DTO/SignUpDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/src/main/java/com/cdweb/chatapp/Repository/TestModelRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/src/main/java/com/cdweb/chatapp/Repository/UserRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/src/main/java/com/cdweb/chatapp/config/CustomUserDetails.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/src/main/java/com/cdweb/chatapp/config/SecurityConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/src/main/java/com/cdweb/chatapp/config/WebsocketConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/src/main/java/com/cdweb/chatapp/controller/ChatController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/src/main/java/com/cdweb/chatapp/controller/TestModelController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/src/main/java/com/cdweb/chatapp/controller/UserController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/src/main/java/com/cdweb/chatapp/exception/ResourceNotFoundException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/src/main/java/com/cdweb/chatapp/model/Message.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/src/main/java/com/cdweb/chatapp/model/Room.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/src/main/java/com/cdweb/chatapp/model/TestModel.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/src/main/java/com/cdweb/chatapp/model/User.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/src/main/java/com/cdweb/chatapp/service/CustomUserDetailsService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/src/main/java/com/cdweb/chatapp/service/TestModelService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/src/main/java/com/cdweb/chatapp/service/UserService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/src/main/resources/application.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/src/test/java/com/cdweb/chatapp/ChatAppApplicationTests.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/src/test/java/com/cdweb/chatapp/test/UserRepositoryTests.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mvnw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mvnw.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cdweb/chatapp/ChatAppApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cdweb/chatapp/config/PasswordConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cdweb/chatapp/config/SecurityConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cdweb/chatapp/config/UserInfoUserDetailsService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cdweb/chatapp/config/UserInforUserDetails.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cdweb/chatapp/config/WebsocketConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cdweb/chatapp/constants/SecurityConstants.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cdweb/chatapp/controller/ChatController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cdweb/chatapp/controller/UserController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cdweb/chatapp/dto/LoginRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cdweb/chatapp/filter/JwtAuthFilter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cdweb/chatapp/model/Message.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cdweb/chatapp/model/Role.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cdweb/chatapp/model/Room.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cdweb/chatapp/model/SecurityUser.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cdweb/chatapp/model/Status.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cdweb/chatapp/model/User.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cdweb/chatapp/repository/MessageRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cdweb/chatapp/repository/RoomRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cdweb/chatapp/repository/UserRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cdweb/chatapp/service/JwtService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cdweb/chatapp/service/MessageService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cdweb/chatapp/service/RoomService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cdweb/chatapp/service/UserService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/applicationContext.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/cdweb/chatapp/ChatAppApplicationTests.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/cdweb/chatapp/test/UserRepositoryTests.java" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="2OkHt3SowGayCAk2PNZWEq9SgKk" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "D:/chat-app/cdweb-chap-app-be/chatapp-be",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="e6c91c25-e984-4318-993c-c95911232d03" name="Changes" comment="" />
+      <created>1682097874418</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1682097874418</updated>
+      <workItem from="1682097875122" duration="312000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
