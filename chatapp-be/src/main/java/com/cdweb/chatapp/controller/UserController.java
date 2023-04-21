@@ -7,6 +7,7 @@ import com.cdweb.chatapp.service.UserService;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
@@ -45,13 +46,15 @@ public class UserController {
             return token;
 
         } else throw new UsernameNotFoundException("invalid user request!");
-
-
-
 //        String jwt = jwtProvider.generateJwtToken(authentication);
 
     }
 
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request) {
+
+        return "redirect:/";
+    }
 
     @GetMapping("/register")
     public String addNewUser(@RequestBody User newUser, HttpServletRequest request) throws MessagingException, UnsupportedEncodingException {
