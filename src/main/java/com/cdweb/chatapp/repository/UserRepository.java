@@ -1,4 +1,4 @@
-package com.cdweb.chatapp.Repository;
+package com.cdweb.chatapp.repository;
 
 import com.cdweb.chatapp.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,11 +9,15 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
+    @Query(value = "SELECT u FROM User u where u.email = ?1 and u.password = ?2 ")
+    Optional login(String email, String password);
 
-    public Optional<User> findByEmail(String email);
+    Optional findByToken(String token);
 
-    public Optional<User> findById(Long id);
+    Optional<User> findByEmail(String email);
+
+    Optional<User> findById(Long id);
 
     @Query("SELECT u FROM User u WHERE u.verificationCode = ?1")
-    public User findByVerificationCode(String code);
+    User findByVerificationCode(String code);
 }

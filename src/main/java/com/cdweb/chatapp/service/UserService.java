@@ -1,6 +1,7 @@
 package com.cdweb.chatapp.service;
 
-import com.cdweb.chatapp.Repository.UserRepository;
+import com.cdweb.chatapp.dto.LoginRequest;
+import com.cdweb.chatapp.repository.UserRepository;
 import com.cdweb.chatapp.model.User;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -84,6 +85,11 @@ public class UserService {
         user.setEnable(true);
         userRepository.save(user);
         return true;
+    }
+
+    public boolean findAccount(LoginRequest loginRequest) {
+        User u = findByEmail(loginRequest.getUsername()).get();
+        return u != null && loginRequest.getPassword().equals(u.getPassword());
     }
 
 }
