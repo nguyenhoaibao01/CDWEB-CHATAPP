@@ -42,7 +42,7 @@ public class UserController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token;
         if (authentication.isAuthenticated()) {
-             token = jwtService.generateToken(loginRequest.getUsername());
+            token = jwtService.generateToken(loginRequest.getUsername());
             return token;
 
         } else throw new UsernameNotFoundException("invalid user request!");
@@ -50,15 +50,13 @@ public class UserController {
 
     }
 
-    @GetMapping("/logout")
-    public String logout(HttpServletRequest request) {
 
-        return "redirect:/";
-    }
-
-    @GetMapping("/register")
-    public String addNewUser(@RequestBody User newUser, HttpServletRequest request) throws MessagingException, UnsupportedEncodingException {
-        return userService.register(newUser, getSiteURL(request));
+    @PostMapping("/register")
+    public ResponseEntity<String> addNewUser(@RequestBody User newUser, HttpServletRequest request) throws MessagingException, UnsupportedEncodingException {
+        boolean ckeckAccount = userService.register(newUser, getSiteURL(request));
+        if (ckeckAccount)
+            return ResponseEntity.ok("Thông tin hợp lệ, hãy xác thực trong email của bạn để hoàn tất!");
+        return ResponseEntity.badRequest().body("Email này đã được đăng ký");
     }
 
     private String getSiteURL(HttpServletRequest request) {

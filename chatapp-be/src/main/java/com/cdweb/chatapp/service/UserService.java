@@ -59,23 +59,26 @@ public class UserService {
         mailSender.send(message);
     }
 
-    public String register(User newUser, String siteURL) throws MessagingException, UnsupportedEncodingException {
+    public boolean register(User newUser, String siteURL) throws MessagingException, UnsupportedEncodingException {
         Optional<User> exist = userRepository.findByEmail(newUser.getEmail());
 
-        if (!exist.isEmpty()) return "Email nay da ton tai!";
+        if (exist.isEmpty()) {
 
-        BCryptPasswordEncoder pwEncoder = new BCryptPasswordEncoder();
-        String pwEncoded = pwEncoder.encode(newUser.getPassword());
-        newUser.setPassword(pwEncoded);
-        String randomCode = RandomString.make(100);
-        newUser.setVerificationCode(randomCode);
-        newUser.setEnable(false);
-        newUser.setRole("ROLE_USER");
+            BCryptPasswordEncoder pwEncoder = new BCryptPasswordEncoder();
+            String pwEncoded = pwEncoder.encode(newUser.getPassword());
+            newUser.setPassword(pwEncoded);
+            String randomCode = RandomString.make(100);
+            newUser.setVerificationCode(randomCode);
+            newUser.setEnable(false);
+            newUser.setRole("ROLE_USER");
 
-        userRepository.save(newUser);
-        senderVerificationEmail(newUser, siteURL);
+            userRepository.save(newUser);
+            senderVerificationEmail(newUser, siteURL);
+            return true;
 
-        return "Hay kiem tra email va xac thuc de hoan tat dang ky!";
+        }
+        return false;
+
     }
 
     public boolean verify(String verificationCode) {
