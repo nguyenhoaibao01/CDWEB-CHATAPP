@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Editor from "./Editor";
 import ContentChat from "./Content/content";
 import { useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
+import Helper from 'utils/Helper';
 import {
   CaretLeftOutlined,
   CaretRightOutlined,
@@ -12,10 +14,13 @@ import { Layout, Collapse, theme, Avatar, Input } from "antd";
 import logo from "../../assets/images/logo.png";
 import "./style.css";
 import { setModelData } from "providers/GeneralProvider/slice";
-
+import type { MenuProps } from "antd";
+import { Dropdown, Space } from "antd";
+import { Menu } from "antd";
+import { log } from "console";
 const { Header, Sider, Content } = Layout;
-
 const Home = (): JSX.Element => {
+  const history = useHistory();
   const { Search } = Input;
   const dispatch = useDispatch();
   const { Panel } = Collapse;
@@ -71,6 +76,30 @@ const Home = (): JSX.Element => {
 
     dispatch(setModelData({ visible: true, data }));
   };
+  const items: MenuProps["items"] = [
+    {
+      label: "Profile",
+      key: "1",
+    },
+    {
+      label: "Logout",
+      key: "2",
+    },
+  ];
+  const onClick: MenuProps["onClick"] = ({ key }) => {
+    if (key === "1") {
+      console.log("profile");
+    } else {
+      localStorage.clear();
+      history.push('/login');
+    }
+  };
+  useEffect(() => {
+    if (!Helper.getAuthToken()) {
+      history.push('/login');
+      window.location.reload();  
+    }
+  }, []);
   return (
     <Layout>
       {!collapsed && (
@@ -114,9 +143,9 @@ const Home = (): JSX.Element => {
           </Collapse>
         </Sider>
       )}
-      <Layout className="site-layout">
+      <Layout className="site-layout h-full">
         <Header style={{ padding: 0, background: colorBgContainer }}>
-          <div className="w-full flex justify-between">
+          <div className="w-full h-full flex justify-between">
             <div>
               {React.createElement(
                 collapsed ? CaretRightOutlined : CaretLeftOutlined,
@@ -127,16 +156,29 @@ const Home = (): JSX.Element => {
               )}
               {/* <Search placeholder="input search text" style={{ width: 200 }} /> */}
             </div>
-            <div className="px-4" onClick={openProfile}>
-              <Avatar style={{ backgroundColor: "red" }}> TN</Avatar>
+            <div className="px-4">
+              <Dropdown menu={{ items, onClick }}>
+                <a
+                  onClick={(e) => {
+                    console.log(e);
+                  }}
+                >
+                  <Space>
+                    <Avatar style={{ backgroundColor: "red" }}> TN</Avatar>
+                  </Space>
+                </a>
+              </Dropdown>
+              {/* <Dropdown.Button menu={menu} onClick={handleButtonClick}>
+      Dropdown
+    </Dropdown.Button> */}
               {/* <span className="mr-2  text-base"> Daisy Nhi</span> */}
             </div>
           </div>
         </Header>
         <Content
+          className="h-full"
           style={{
             margin: "16px 16px",
-            minHeight: 280,
             background: colorBgContainer,
           }}
         >

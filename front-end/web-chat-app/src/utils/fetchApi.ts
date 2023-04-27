@@ -9,14 +9,14 @@ const headers = {
 };
 const fetchApi = {
   post: (url, body) => {
-    return fetch(`${API_URL}/${url}`, {
+    return fetch(`http://localhost:8080/${url}`, {
       method: 'POST',
       headers,
       body,
     }).then((response) => response.json());
   },
   put: (url, body) => {
-    return fetch(`${API_URL}/${url}`, {
+    return fetch(`http://localhost:8080/${url}`, {
       method: 'put',
       headers,
       body,
