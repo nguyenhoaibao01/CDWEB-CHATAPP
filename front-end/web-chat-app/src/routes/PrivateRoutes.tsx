@@ -1,5 +1,6 @@
 import { FunctionComponent, useEffect } from "react";
 import { Route, useHistory } from "react-router-dom";
+import Helper from 'utils/Helper';
 
 interface PrivateRoutesProps {
   exact: boolean;
@@ -13,11 +14,12 @@ const PrivateRoutes = ({
   component,
 }: PrivateRoutesProps): JSX.Element => {
   const history = useHistory();
-  // useEffect(() => {
-  //   if (!token) {
-  //     history.push('/login');
-  //   }
-  // }, [token, history]);
+  const token = Helper.getAuthToken();
+  useEffect(() => {
+    if (!token) {
+      history.push('/login');
+    }
+  }, [token, history]);
   return <Route exact={exact} path={path} component={component} />;
 };
 

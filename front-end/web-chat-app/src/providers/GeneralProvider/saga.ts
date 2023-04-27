@@ -2,15 +2,15 @@ import _get from 'lodash/get';
 import { call } from 'redux-saga/effects';
 import { ERRORS } from 'utils/constants';
 import Helper from 'utils/Helper';
+import { message } from 'antd';
 
 export class ApiError {
   message: string;
 
-  code: number;
+  // code: number;
 
-  constructor(error: { message: string; code: number }) {
-    this.message = error.message;
-    this.code = error.code;
+  constructor(error:string) {
+    this.message = error;
   }
 }
 

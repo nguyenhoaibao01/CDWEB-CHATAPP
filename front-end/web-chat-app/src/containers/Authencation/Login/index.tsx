@@ -2,20 +2,25 @@ import "./index.css";
 import { useHistory } from "react-router-dom";
 import { useEffect } from "react";
 import logo from "assets/images/logo.png";
+import { loginRequest } from 'providers/AuthProvider/slice';
+import { useAppDispatch, useAppSelector } from 'store';
 
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Form, Input, Card } from "antd";
 
 const Login = (): JSX.Element => {
   const [form] = Form.useForm();
+  const dispatch = useAppDispatch();
 
-  //   const history = useHistory();
+    const history = useHistory();
 
   const onHandleLogin = (values: any): void => {
     const data = {
-      username: values.username.toLowerCase(),
+      username: values.username,
       password: values.password,
     };
+    dispatch(loginRequest(data));
+
   };
 
   useEffect(() => {
@@ -24,11 +29,15 @@ const Login = (): JSX.Element => {
 
   const handleForgotPassword = (e: any) => {
     e.preventDefault();
-    // history.push('/forgetPassword');
+    history.push('/forgotPassword');
   };
   const onFinish = (values: any) => {
     console.log("Received values of form: ", values);
   };
+  const routerToRegister =()=>{
+    history.push('/register');
+
+  }
   return (
     <div
       className="login w-full flex justify-center items-center h-full"
@@ -45,7 +54,7 @@ const Login = (): JSX.Element => {
           name="normal_login"
           className="login-form"
           initialValues={{ remember: true }}
-          onFinish={onFinish}
+          onFinish={onHandleLogin}
         >
           <Form.Item
             name="username"
@@ -53,7 +62,7 @@ const Login = (): JSX.Element => {
           >
             <Input
               prefix={<UserOutlined className="site-form-item-icon" />}
-              placeholder="Username"
+              placeholder="User name"
               size="large"
             />
           </Form.Item>
@@ -73,7 +82,7 @@ const Login = (): JSX.Element => {
               <Checkbox>Remember me</Checkbox>
             </Form.Item>
 
-            <a className="login-form-forgot" href="">
+            <a className="login-form-forgot" href="" onClick={handleForgotPassword}>
               Forgot password
             </a>
           </Form.Item>
@@ -86,7 +95,7 @@ const Login = (): JSX.Element => {
             >
               Log in
             </Button>
-            Or <a href="">register now!</a>
+            Or <a href="" onClick={routerToRegister}>register now!</a>
           </Form.Item>
         </Form>
       </Card>

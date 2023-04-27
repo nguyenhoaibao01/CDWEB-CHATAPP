@@ -5,12 +5,12 @@ import { API_URL } from './config';
 import Helper from './Helper';
 
 const service = axios.create({
-  baseURL: API_URL,
+  baseURL: 'http://localhost:8080',
   timeout: 90000,
 });
 
 function refreshToken() {
-  return service.post(`${API_URL}/v1/authentication/refresh`, {
+  return service.post(`http://localhost:8080/v1/authentication/refresh`, {
     refreshToken: `Bearer ${Helper.getAuthrefreshToken()}`,
   });
 }
@@ -29,19 +29,19 @@ service.interceptors.request.use(
 );
 
 service.interceptors.response.use(
-  (response) => {
-    return response.data;
+  (response) => {    
+    return response;
   },
 
   async (error) => {
     console.log('error - ', error);
     const { code } = error.response.data;
-    if (code === 401) {
+    if (code === 400) {
       return refreshToken().then((rs) => {
         const { accessToken } = rs.data;
         Helper.storeAuthToken(accessToken);
         const config = error.config;
-        config.baseURL = API_URL;
+        config.baseURL = 'http://localhost:8080';
         return service(config);
       });
     }

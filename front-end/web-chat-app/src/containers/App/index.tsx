@@ -7,7 +7,7 @@ import { ToastContainer } from "react-toastify";
 // import ConfirmModal from 'components/ConfirmModal';
 // import ErrorBoundary from 'components/ErrorBoundary';
 // import i18n from 'i18n';
-import { getProfileUserRequest } from "providers/AuthProvider/slice";
+// import { getProfileUserRequest } from "providers/AuthProvider/slice";
 import { indexRoutes, PrivateRoutes, PublicRoutes } from "routes";
 import Helper from "utils/Helper";
 
@@ -20,7 +20,7 @@ const App = (): JSX.Element => {
     );
 
     if (Helper.getAuthToken() && termAndConditionStatus !== "PENDING") {
-      dispatch(getProfileUserRequest());
+      // dispatch(getProfileUserRequest());
     }
   }, []);
 

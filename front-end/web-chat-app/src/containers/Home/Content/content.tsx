@@ -56,7 +56,7 @@ const dispatch = useDispatch();
     dispatch(setModelData({ visible: true, data }));
   };
   return (
-    <div className="w-full">
+    <div className="w-full h-[80vh]">
       <div
         className="border-b border-slate-400 py-3 w-full flex items-center"
         onClick={openProfile}
@@ -73,7 +73,7 @@ const dispatch = useDispatch();
           <VirtualList
             data={data}
             height={ContainerHeight}
-            itemHeight={47}
+            itemHeight={50}
             itemKey="email"
             onScroll={onScroll}
           >
