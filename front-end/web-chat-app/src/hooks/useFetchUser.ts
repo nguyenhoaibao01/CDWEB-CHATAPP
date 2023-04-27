@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { getCurrentUserRequest } from 'providers/AuthProvider/slice';
+// import { getCurrentUserRequest } from 'providers/AuthProvider/slice';
 import { useAppDispatch, useAppSelector } from 'store';
 import Helper from 'utils/Helper';
 
@@ -13,7 +13,7 @@ const useFetchUser = (
 
   useEffect(() => {
     if (Helper.getAuthToken()) {
-      dispatch(getCurrentUserRequest({ isAuthorizing: isInitializing }));
+      // dispatch(getCurrentUserRequest({ isAuthorizing: isInitializing }));
     }
   }, [dispatch, isInitializing]);
 

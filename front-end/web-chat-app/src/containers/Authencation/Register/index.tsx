@@ -5,30 +5,32 @@ import logo from "assets/images/logo.png";
 
 import { LockOutlined, UserOutlined, MailOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Form, Input, Card } from "antd";
+import { registerRequest } from 'providers/AuthProvider/slice';
+import { useAppDispatch, useAppSelector } from 'store';
+import { log } from "console";
+import { push } from "connected-react-router";
 
 const Register = (): JSX.Element => {
   const [form] = Form.useForm();
+  const dispatch = useAppDispatch();
+  const history = useHistory();
 
-  //   const history = useHistory();
-
-  const onHandleLogin = (values: any): void => {
+  const handleRegister = (values: any): void => {
     const data = {
-      username: values.username.toLowerCase(),
+      email: values.email,
       password: values.password,
-    };
+    };    
+    dispatch(registerRequest(data));
+
   };
 
+  const routerToLogin = (values: any): void => {
+    history.push('/login');
+  };
   useEffect(() => {
     localStorage.clear();
   }, []);
 
-  const handleForgotPassword = (e: any) => {
-    e.preventDefault();
-    // history.push('/forgetPassword');
-  };
-  const onFinish = (values: any) => {
-    console.log("Received values of form: ", values);
-  };
   return (
     <div
       className="login w-full flex justify-center items-center h-full"
@@ -45,9 +47,9 @@ const Register = (): JSX.Element => {
           name="normal_login"
           className="login-form"
           initialValues={{ remember: true }}
-          onFinish={onFinish}
+          onFinish={handleRegister}
         >
-          <Form.Item
+          {/* <Form.Item
             name="username"
             rules={[{ required: true, message: "Please input your Username!" }]}
           >
@@ -56,7 +58,7 @@ const Register = (): JSX.Element => {
               placeholder="Username"
               size="large"
             />
-          </Form.Item>
+          </Form.Item> */}
           <Form.Item
             name="email"
             rules={[{ required: true, message: "Please input your Email!" }]}
@@ -78,7 +80,7 @@ const Register = (): JSX.Element => {
               size="large"
             />
           </Form.Item>
-          <Form.Item
+          {/* <Form.Item
             name="password2"
             rules={[{ required: true, message: "Please input your Password!" }]}
           >
@@ -88,7 +90,7 @@ const Register = (): JSX.Element => {
               placeholder="Password again"
               size="large"
             />
-          </Form.Item>
+          </Form.Item> */}
           <Form.Item>
             <Button
               type="primary"
@@ -97,7 +99,7 @@ const Register = (): JSX.Element => {
             >
              Register
             </Button>
-            Or <a href=""> if you have account, Login now!</a>
+            Or <a href="" onClick={routerToLogin}> if you have account, Login now!</a>
           </Form.Item>
         </Form>
       </Card>

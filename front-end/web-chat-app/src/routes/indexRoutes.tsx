@@ -23,7 +23,7 @@ const indexRoutes = [
   // },
 
   {
-    path: "/",
+    path: "/login",
     component: LoginPage,
     exact: true,
   },
@@ -40,6 +40,11 @@ const indexRoutes = [
   {
     path: "/home",
     component: Home,
+    exact: true,
+  },
+  {
+    path: '/',
+    component: RedirectToLogin,
     exact: true,
   },
 ];
