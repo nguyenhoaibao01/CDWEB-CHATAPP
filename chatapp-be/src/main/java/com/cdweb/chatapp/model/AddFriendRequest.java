@@ -2,9 +2,9 @@ package com.cdweb.chatapp.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -13,20 +13,15 @@ import java.time.LocalDateTime;
 @ToString
 @Builder
 @Entity
-@Table(name = "messages")
-public class Message {
+@Table(name = "add_friend_request")
+public class AddFriendRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @ManyToOne()
+   @ManyToOne
     private User sender;
-    @ManyToOne()
-    private Room room;
+    @ManyToOne
+    private User receiver;
     @Column
     private LocalDateTime sendAt;
-    @Column
-    private String content;
-
-
-
 }

@@ -1,0 +1,20 @@
+package com.cdweb.chatapp.service;
+
+import com.cdweb.chatapp.model.AddFriendRequest;
+import com.cdweb.chatapp.repository.AddFriendRequestRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class AddFriendRequestService {
+    @Autowired
+    private AddFriendRequestRepository addFriendRequestRepository;
+
+    public void sendRequest(AddFriendRequest friendRequest){
+     addFriendRequestRepository.save(friendRequest);
+    }
+
+    public void deleteRequest(long id){
+        addFriendRequestRepository.deleteById(id);
+    }
+}

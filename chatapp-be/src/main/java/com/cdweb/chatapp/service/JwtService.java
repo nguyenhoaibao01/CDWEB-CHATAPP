@@ -69,14 +69,14 @@ public class JwtService {
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 ))
                 .signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
-        //
+
         String[] chunks = str.split("\\.");
         Base64.Decoder decoder = Base64.getUrlDecoder();
 
         String header = new String(decoder.decode(chunks[0]));
         String payload = new String(decoder.decode(chunks[1]));
-        System.out.println(header);
-        System.out.println(payload);
+//        System.out.println(header);
+//        System.out.println(payload);
 
         return str;
     }

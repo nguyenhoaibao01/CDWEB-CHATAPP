@@ -50,7 +50,7 @@ public class SecurityConfig{
         return http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/register", "/verify", "/auth","/users").permitAll()
+                        .requestMatchers("/", "/chatapp.api/register", "/verify", "/chatapp.api/auth","/chatapp.api/users").permitAll()
                         .anyRequest().authenticated()
                 )
 //                .formLogin().defaultSuccessUrl("/users", true)

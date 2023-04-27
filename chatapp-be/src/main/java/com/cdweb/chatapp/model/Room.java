@@ -24,10 +24,12 @@ public class Room {
     private boolean isGroup;
     @ManyToOne
     private User admin;
+//    @ManyToOne
+//    private User updateBy;
     @Column
-    private LocalDateTime createAt = LocalDateTime.now();
+    private LocalDateTime createAt ;
     @Column
-    private LocalDateTime updateAt = LocalDateTime.now();
+    private LocalDateTime updateAt;
 
     @ManyToMany
     private Set<User> members= new HashSet<>();

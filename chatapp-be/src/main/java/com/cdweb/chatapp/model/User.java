@@ -17,9 +17,12 @@ import java.util.*;
 @Entity
 @Table(name = "users")
 public class User  {
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    private long id;
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private String email;
     @Column()
     private String name;
     @Column()
@@ -28,8 +31,7 @@ public class User  {
     private Date birthday;
     @Column()
     private String phone;
-    @Column()
-    private String email;
+
     @Column()
     private String address;
     @Column()
@@ -44,12 +46,15 @@ public class User  {
     private String verificationCode;
     @Column(nullable = false)
     private boolean enable;
+
     @OneToMany(mappedBy = "sender")
     private Set<Message> messages;
-
     @OneToMany(mappedBy = "admin")
     private Set<Room> room;
-
+    @OneToMany(mappedBy = "sender")
+    private Set<AddFriendRequest> addFriendRequestSender;
+    @OneToMany(mappedBy = "receiver")
+    private Set<AddFriendRequest> addFriendRequestReceiver;
     @ManyToMany(mappedBy = "members")
     private Set<Room> rooms= new HashSet<>();
 

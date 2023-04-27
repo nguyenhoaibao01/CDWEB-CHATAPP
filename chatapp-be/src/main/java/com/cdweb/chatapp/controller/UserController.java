@@ -1,7 +1,10 @@
 package com.cdweb.chatapp.controller;
 
+import com.cdweb.chatapp.dto.AddFriendReqDto;
 import com.cdweb.chatapp.dto.LoginRequest;
+import com.cdweb.chatapp.model.AddFriendRequest;
 import com.cdweb.chatapp.model.User;
+import com.cdweb.chatapp.service.AddFriendRequestService;
 import com.cdweb.chatapp.service.JwtService;
 import com.cdweb.chatapp.service.UserService;
 import jakarta.mail.MessagingException;
@@ -22,15 +25,18 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
+@RequestMapping("/chatapp.api")
 public class UserController {
     @Autowired
     private UserService userService;
-
+    @Autowired
+    private AddFriendRequestService friendRequestService;
     @Autowired
     private JwtService jwtService;
     @Autowired
@@ -64,14 +70,6 @@ public class UserController {
         return siteURL.replace(request.getServletPath(), "");
     }
 
-    @GetMapping("/verify")
-    public String verifyUser(@Param("code") String code, HttpServletResponse httpServletResponse) throws IOException {
-        if (userService.verify(code)) {
-            httpServletResponse.sendRedirect("http://localhost:8080/login");
-            return "verify success";
-        }
-        return "verify false";
-    }
 
 //    =====================================================================================================
 
@@ -92,9 +90,30 @@ public class UserController {
         return userService.findAll();
     }
 
-    @GetMapping("/users/{id}")
-    public Optional<User> getUser(@PathVariable String id) {
-        return userService.findById(Long.parseLong(id));
+    @GetMapping("/users/{username}")
+    public Optional<User> getUser(@PathVariable String username) {
+        return userService.findById(username);
     }
+
+//    @PostMapping("/addFriend")
+//    public void addFriendRequest(@RequestHeader("Authorization") String bearerToken, @RequestBody AddFriendReqDto addFriendReqDto) {
+//
+//        String username = jwtService.extractUsername(bearerToken.substring(7));
+//
+//        User sender = userService.findByEmail(username).get();
+//        User receiver = userService.findByEmail(addFriendReqDto.getReceiver()).get();
+//
+//
+//        AddFriendRequest addFriendRequest = new AddFriendRequest();
+//        addFriendRequest.setSender(sender);
+//        addFriendRequest.setReceiver(receiver);
+//        addFriendRequest.setSendAt(LocalDateTime.now());
+//
+//
+//
+//        System.out.println(username +"haha" + receiver.getEmail());
+//
+//        friendRequestService.sendRequest(addFriendRequest);
+//    }
 
 }
