@@ -10,6 +10,10 @@ public class AddFriendRequestService {
     @Autowired
     private AddFriendRequestRepository addFriendRequestRepository;
 
+    public AddFriendRequest findById(long id){
+       return addFriendRequestRepository.findById(id).get();
+    }
+
     public void sendRequest(AddFriendRequest friendRequest){
      addFriendRequestRepository.save(friendRequest);
     }

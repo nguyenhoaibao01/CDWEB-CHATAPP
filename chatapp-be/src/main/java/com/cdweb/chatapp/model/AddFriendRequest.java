@@ -24,4 +24,6 @@ public class AddFriendRequest {
     private User receiver;
     @Column
     private LocalDateTime sendAt;
+
+
 }

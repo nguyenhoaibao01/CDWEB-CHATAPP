@@ -36,4 +36,12 @@ public class Room {
 
     @OneToMany
     private Set<Message> messages= new HashSet<>();
+
+    public void addMember(User u){
+        this.members.add(u);
+    }
+
+    public void addAllMember(Set<User> users){
+        this.members.addAll(users);
+    }
 }

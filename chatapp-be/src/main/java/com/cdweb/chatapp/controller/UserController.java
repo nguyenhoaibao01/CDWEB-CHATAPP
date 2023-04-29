@@ -95,6 +95,11 @@ public class UserController {
         return userService.findById(username);
     }
 
+    @GetMapping("/users/me")
+    public Optional<User> myProfile(@RequestHeader("Authorization") String bearerToken) {
+        String username = jwtService.extractUsername(bearerToken.substring(7));
+        return userService.findById(username);
+    }
 //    @PostMapping("/addFriend")
 //    public void addFriendRequest(@RequestHeader("Authorization") String bearerToken, @RequestBody AddFriendReqDto addFriendReqDto) {
 //
