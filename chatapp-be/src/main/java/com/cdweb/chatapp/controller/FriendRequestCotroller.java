@@ -9,15 +9,11 @@ import com.cdweb.chatapp.service.AddFriendRequestService;
 import com.cdweb.chatapp.service.JwtService;
 import com.cdweb.chatapp.service.RoomService;
 import com.cdweb.chatapp.service.UserService;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.HashSet;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -58,6 +54,9 @@ public class FriendRequestCotroller {
         newRoom.addMember(friendRequest.getReceiver());
         newRoom.setCreateAt(LocalDateTime.now());
         newRoom.setUpdateAt(LocalDateTime.now());
+
+        friendRequest.getSender().addRoom(newRoom);
+        friendRequest.getReceiver().addRoom(newRoom);
 
         roomService.createNewRoom(newRoom);
         friendRequestService.deleteRequest(idDto.getId());

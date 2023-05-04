@@ -1,5 +1,6 @@
 package com.cdweb.chatapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,7 +17,7 @@ import java.util.*;
 @Builder
 @Entity
 @Table(name = "users")
-public class User  {
+public class User {
 //    @Id
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)
 //    private long id;
@@ -55,9 +56,13 @@ public class User  {
     private Set<AddFriendRequest> addFriendRequestSender;
     @OneToMany(mappedBy = "receiver")
     private Set<AddFriendRequest> addFriendRequestReceiver;
-    @ManyToMany(mappedBy = "members")
-    private Set<Room> rooms= new HashSet<>();
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "rooms_members")
+    @JsonIgnore
+    private Set<Room> rooms = new HashSet<>();
 
-
+    public void addRoom(Room r) {
+        this.rooms.add(r);
+    }
 }
 

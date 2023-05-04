@@ -1,10 +1,12 @@
 package com.cdweb.chatapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -24,14 +26,15 @@ public class Room {
     private boolean isGroup;
     @ManyToOne
     private User admin;
-//    @ManyToOne
+    //    @ManyToOne
 //    private User updateBy;
     @Column
     private LocalDateTime createAt ;
     @Column
     private LocalDateTime updateAt;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "rooms")
+    @JsonIgnore
     private Set<User> members= new HashSet<>();
 
     @OneToMany
@@ -45,3 +48,4 @@ public class Room {
         this.members.addAll(users);
     }
 }
+
