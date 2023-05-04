@@ -38,6 +38,7 @@ public class Room {
     private Set<User> members= new HashSet<>();
 
     @OneToMany
+    @JsonIgnore
     private Set<Message> messages= new HashSet<>();
 
     public void addMember(User u){
