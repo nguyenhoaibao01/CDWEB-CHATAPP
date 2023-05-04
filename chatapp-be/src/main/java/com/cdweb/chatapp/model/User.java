@@ -49,12 +49,16 @@ public class User {
     private boolean enable;
 
     @OneToMany(mappedBy = "sender")
+    @JsonIgnore
     private Set<Message> messages;
     @OneToMany(mappedBy = "admin")
+    @JsonIgnore
     private Set<Room> room;
     @OneToMany(mappedBy = "sender")
+    @JsonIgnore
     private Set<AddFriendRequest> addFriendRequestSender;
     @OneToMany(mappedBy = "receiver")
+    @JsonIgnore
     private Set<AddFriendRequest> addFriendRequestReceiver;
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "rooms_members")
