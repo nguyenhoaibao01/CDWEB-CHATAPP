@@ -58,6 +58,21 @@ const authSlice = createSlice({
       // Helper.convertMessage(action.payload);
       return { ...state, isLoading: false, statusLogin: "failded" };
     },
+    getProfile(state) {
+      return { ...state, isLoading: true, statusLogin: "loading" };
+    },
+    getProfileSuccess(state, action) {
+      return {
+        ...state,
+        isLoading: false,
+        isAuthorizing: "success",
+        statusLogin: "success",
+      };
+    },
+    getProfileError(state, action) {
+      // Helper.convertMessage(action.payload);
+      return { ...state, isLoading: false, statusLogin: "failded" };
+    },
   }
 });
 
@@ -67,6 +82,9 @@ export const {
   loginRequest,
   loginSuccess,
   loginError,
+  getProfile,
+  getProfileSuccess,
+  getProfileError
 } = authSlice.actions;
 
 export default authSlice.reducer;

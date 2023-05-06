@@ -8,6 +8,9 @@ import {
   loginError,
   loginRequest,
   loginSuccess,
+  getProfile,
+  getProfileSuccess,
+  getProfileError,
 } from "providers/AuthProvider/slice";
 import { callApi } from "providers/GeneralProvider/saga";
 import api from "utils/service";
@@ -19,7 +22,7 @@ import { log } from "console";
 export function* handleRegisterRequest(action: any) {
   try {
     const { data } = yield callApi(api.post, "register", action.payload);
-    console.log(data)
+    console.log(data);
     message.success(data);
     yield put(push("/login"));
     window.location.reload();
@@ -44,8 +47,6 @@ function* handleLogin(action) {
     // }
     // const { data, error } = result;
 
-
-    
     // const loginAction = _get(data, "loginAction", "");
     // const termAndConditionStatus = _get(data, "termAndConditionStatus", "NA");
     // const refreshToken = _get(data, "refreshToken", "");
@@ -79,7 +80,7 @@ function* handleLogin(action) {
 
     // const infoUser = yield callApi(api.get, "v1/merchant/user/profile");
 
-    // // yield put(getProfileUserSuccess(infoUser.data));
+    // yield put(getProfileUserSuccess(infoUser.data));
 
     // if (infoUser.data.type === "CASHIER") {
     //   yield put(push("/transactions"));
@@ -93,8 +94,22 @@ function* handleLogin(action) {
     yield put(loginError(error));
   }
 }
+export function* handleGetProfile(action: any) {
+  try {
+    const { data } = yield callApi(api.get, 'users/me');
+    // callApi(api.get, 'v1/merchant/user/profile');
+    console.log(data);
+    message.success(data);
+    // yield put(push("/login"));
+    // window.location.reload();
+  } catch (error) {
+    console.log(error);
+    // yield put(registerRequestError(error.message));
+  }
+}
 
 export default function* watchAuth(): Generator {
   yield takeLeading(registerRequest.type, handleRegisterRequest);
   yield takeLeading(loginRequest.type, handleLogin);
+  yield takeLeading(getProfile.type, handleGetProfile);
 }

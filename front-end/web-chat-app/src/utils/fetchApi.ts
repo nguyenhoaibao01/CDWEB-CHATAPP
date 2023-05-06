@@ -9,14 +9,14 @@ const headers = {
 };
 const fetchApi = {
   post: (url, body) => {
-    return fetch(`http://localhost:8080/${url}`, {
+    return fetch(`http://localhost:8080/chatapp.api'/${url}`, {
       method: 'POST',
       headers,
       body,
     }).then((response) => response.json());
   },
   put: (url, body) => {
-    return fetch(`http://localhost:8080/${url}`, {
+    return fetch(`http://localhost:8080/chatapp.api'/${url}`, {
       method: 'put',
       headers,
       body,

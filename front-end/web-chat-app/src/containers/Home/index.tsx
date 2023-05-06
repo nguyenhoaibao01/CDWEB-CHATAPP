@@ -16,8 +16,7 @@ import "./style.css";
 import { setModelData } from "providers/GeneralProvider/slice";
 import type { MenuProps } from "antd";
 import { Dropdown, Space } from "antd";
-import { Menu } from "antd";
-import { log } from "console";
+import { getProfile } from 'providers/AuthProvider/slice';
 const { Header, Sider, Content } = Layout;
 const Home = (): JSX.Element => {
   const history = useHistory();
@@ -89,6 +88,7 @@ const Home = (): JSX.Element => {
   const onClick: MenuProps["onClick"] = ({ key }) => {
     if (key === "1") {
       console.log("profile");
+      // openProfile()
     } else {
       localStorage.clear();
       history.push('/login');
@@ -100,6 +100,9 @@ const Home = (): JSX.Element => {
       window.location.reload();  
     }
   }, []);
+  useEffect(() => {
+    dispatch(getProfile())
+  }, [Helper.getAuthToken()]);
   return (
     <Layout>
       {!collapsed && (

@@ -23,8 +23,8 @@ interface UserItem {
   };
 }
 
-const fakeDataUrl =
-  "https://randomuser.me/api/?results=20&inc=name,gender,email,nat,picture&noinfo";
+// const fakeDataUrl =
+//   "https://randomuser.me/api/?results=20&inc=name,gender,email,nat,picture&noinfo";
 const ContainerHeight = 400;
 
 const Content = (): JSX.Element => {
@@ -32,12 +32,12 @@ const Content = (): JSX.Element => {
 const dispatch = useDispatch();
 
   const appendData = () => {
-    fetch(fakeDataUrl)
-      .then((res) => res.json())
-      .then((body) => {
-        setData(data.concat(body.results));
-        message.success(`${body.results.length} more items loaded!`);
-      });
+    // fetch(fakeDataUrl)
+    //   .then((res) => res.json())
+    //   .then((body) => {
+    //     setData(data.concat(body.results));
+    //     message.success(`${body.results.length} more items loaded!`);
+    //   });
   };
 
   useEffect(() => {
