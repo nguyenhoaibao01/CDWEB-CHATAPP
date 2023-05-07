@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -27,6 +29,16 @@ public class FriendRequestCotroller {
     private JwtService jwtService;
     @Autowired
     private RoomService roomService;
+
+    @GetMapping("/addFriendReq/myRequest")
+    public List<AddFriendRequest> getMyAddFriendRequest(@RequestHeader("Authorization") String bearerToken) {
+        String username = jwtService.extractUsername(bearerToken.substring(7));
+        User receiver = userService.findByEmail(username).get();
+
+        ArrayList<AddFriendRequest> requests = new ArrayList<>(friendRequestService.getMyAddFriendRequest(receiver));
+        return requests;
+
+    }
 
     @PostMapping("/addFriend")
     public void addFriendRequest(@RequestHeader("Authorization") String bearerToken, @RequestBody AddFriendReqDto addFriendReqDto) {
@@ -43,8 +55,9 @@ public class FriendRequestCotroller {
 
         friendRequestService.sendRequest(addFriendRequest);
     }
+
     @PostMapping("/acceptFriend")
-    public void acceptAddFriendRequest(@RequestBody IdDto idDto){
+    public void acceptAddFriendRequest(@RequestBody IdDto idDto) {
         System.out.println("haha");
         System.out.println(idDto.getId());
         AddFriendRequest friendRequest = friendRequestService.findById(idDto.getId());

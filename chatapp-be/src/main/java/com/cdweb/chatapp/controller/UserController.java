@@ -91,8 +91,8 @@ public class UserController {
     }
 
     @GetMapping("/users/{username}")
-    public Optional<User> getUser(@PathVariable String username) {
-        return userService.findById(username);
+    public User getUser(@PathVariable String username) {
+        return userService.findById(username).get();
     }
 
     @GetMapping("/users/me")
