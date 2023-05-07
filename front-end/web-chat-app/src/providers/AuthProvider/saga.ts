@@ -11,6 +11,9 @@ import {
   getProfile,
   getProfileSuccess,
   getProfileError,
+  searchUser,
+  searchUserSuccess,
+  searchUserError
 } from "providers/AuthProvider/slice";
 import { callApi } from "providers/GeneralProvider/saga";
 import api from "utils/service";
@@ -36,60 +39,11 @@ function* handleLogin(action) {
     // NOTE: Replace with your api and configuration
 
     const { data } = yield callApi(api.post, "auth", action.payload);
-    console.log(data);
     if (data) {
       yield put(push("/home"));
       localStorage.setItem("op_token", data);
       window.location.reload();
     }
-    // if (result.code && result.message) {
-    //   yield put(loginError(result));
-    // }
-    // const { data, error } = result;
-
-    // const loginAction = _get(data, "loginAction", "");
-    // const termAndConditionStatus = _get(data, "termAndConditionStatus", "NA");
-    // const refreshToken = _get(data, "refreshToken", "");
-    // const otpRefId = _get(data, "otpRefId", "");
-
-    // localStorage.setItem("termAndConditionStatus", termAndConditionStatus);
-
-    // if (!token && loginAction === "CHANGE_PASSWORD") {
-    //   localStorage.setItem("refId", otpRefId);
-    //   if (termAndConditionStatus === "PENDING") {
-    //     yield put(push("/firstLogin/OTPVerification"));
-    //   } else yield put(push("/OTPVerification"));
-    //   window.location.reload();
-    //   // yield put(loginFirstTime());
-    //   return;
-    // }
-
-    // if (!token) {
-    //   yield put(loginError(error));
-    //   return;
-    // }
-
-    // Helper.storeAuthToken(token);
-    // Helper.storeAuthrefreshToken(refreshToken);
-
-    // if (termAndConditionStatus === "PENDING") {
-    //   yield put(push("/merchantAgreement"));
-    //   window.location.reload();
-    //   return;
-    // }
-
-    // const infoUser = yield callApi(api.get, "v1/merchant/user/profile");
-
-    // yield put(getProfileUserSuccess(infoUser.data));
-
-    // if (infoUser.data.type === "CASHIER") {
-    //   yield put(push("/transactions"));
-    // } else {
-    //   yield put(push("/storeManagement"));
-    // }
-
-    // window.location.reload();
-    // yield put(loginSuccess(null));
   } catch (error) {
     yield put(loginError(error));
   }
@@ -97,14 +51,21 @@ function* handleLogin(action) {
 export function* handleGetProfile(action: any) {
   try {
     const { data } = yield callApi(api.get, 'users/me');
-    // callApi(api.get, 'v1/merchant/user/profile');
-    console.log(data);
-    message.success(data);
-    // yield put(push("/login"));
-    // window.location.reload();
+    yield put(getProfileSuccess(data));
   } catch (error) {
     console.log(error);
-    // yield put(registerRequestError(error.message));
+    yield put(getProfileError(error));
+  }
+}
+export function* handleSearchUser(action: any) {
+  try {
+    console.log(action.payload);
+    
+    const { data } = yield callApi(api.get, `users/${action.payload}`);
+    yield put(searchUserSuccess(data));
+  } catch (error) {
+    console.log(error);
+    yield put(searchUserError(error));
   }
 }
 
@@ -112,4 +73,6 @@ export default function* watchAuth(): Generator {
   yield takeLeading(registerRequest.type, handleRegisterRequest);
   yield takeLeading(loginRequest.type, handleLogin);
   yield takeLeading(getProfile.type, handleGetProfile);
+  yield takeLeading(searchUser.type, handleSearchUser);
+
 }

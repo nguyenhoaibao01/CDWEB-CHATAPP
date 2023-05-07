@@ -17,6 +17,7 @@ import { setModelData, resetModelData } from "providers/GeneralProvider/slice";
 const ModelOption = (props): JSX.Element => {
   const modalData = useAppSelector((state) => state.general.modelData);
   const { visible, data } = modalData;
+  console.log(data);
 
   const dispatch = useAppDispatch();
 
@@ -41,17 +42,26 @@ const ModelOption = (props): JSX.Element => {
         footer={false}
       >
         <div className="w-full flex flex-col justify-center items-center">
-          <Card style={{ width: 240 }} bordered={false}>
-            <Avatar
+          <Card bordered={false}>
+            {/* <Avatar
               className="my-4 text-center"
               shape="square"
               size={120}
               src={avatar}
               style={{ backgroundColor: "yellow" }}
-            />
+            /> */}
+            <Avatar
+              className="my-4 text-center"
+              shape="square"
+              size={120}
+              style={{ backgroundColor: "red" }}
+            >
+              {" "}
+             <span className="text-4xl font-bold"> {data?.email?.substring(0, 1)?.toUpperCase()}</span>
+            </Avatar>
             <div className="flex flex-col">
               <span className="text-base text-gray-600 font-medium leading-8">
-                Thi Nhi (Daisy Nhi)
+                {data.email}
               </span>
               <span className="text-xs font-normal text-gray-400 leading-6">
                 Frontend developer
@@ -59,7 +69,7 @@ const ModelOption = (props): JSX.Element => {
             </div>
           </Card>
           <Button type="primary" ghost className="mt-3 w-1/3">
-            <MessageOutlined /> Messgaes
+            <MessageOutlined /> Messages
           </Button>
         </div>
       </Modal>

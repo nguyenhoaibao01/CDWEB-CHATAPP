@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { message } from "antd";
 import { push } from "connected-react-router";
-import { useHistory } from 'react-router-dom';
+import { useHistory } from "react-router-dom";
 
 // import moment from 'moment';
 // import Helper from 'utils/Helper';
@@ -14,6 +14,7 @@ export interface AuthState {
   isAuthorizing: "idle" | "loading" | "success";
   contentMerchantAgreement: string;
   statusUpdateTC: string;
+  userSearch:any;
 }
 
 const initialState = {
@@ -24,6 +25,7 @@ const initialState = {
   statusLogin: {},
   contentMerchantAgreement: "",
   statusUpdateTC: "",
+  userSearch:{}
 } as AuthState;
 
 const authSlice = createSlice({
@@ -36,13 +38,13 @@ const authSlice = createSlice({
     loginFirstTime(state) {
       // eslint-disable-next-line react-hooks/rules-of-hooks
       const history = useHistory();
-      history.push('/changePasswordLoginFirstTime');
+      history.push("/changePasswordLoginFirstTime");
     },
 
     registerRequestError(state, action) {
       message.error(action.payload);
     },
-    
+
     loginRequest(state, action) {
       return { ...state, isLoading: true, statusLogin: "loading" };
     },
@@ -65,15 +67,29 @@ const authSlice = createSlice({
       return {
         ...state,
         isLoading: false,
-        isAuthorizing: "success",
-        statusLogin: "success",
+        profileUser: action.payload,
       };
     },
     getProfileError(state, action) {
       // Helper.convertMessage(action.payload);
       return { ...state, isLoading: false, statusLogin: "failded" };
     },
-  }
+    searchUser(state, action) {
+      return { ...state, isLoading: false };
+    },
+    searchUserSuccess(state, action) {
+      console.log(action.payload);
+      return {
+        ...state,
+        isLoading: false,
+        userSearch: action.payload,
+      };
+    },
+    searchUserError(state, action) {
+
+    },
+
+  },
 });
 
 export const {
@@ -84,7 +100,10 @@ export const {
   loginError,
   getProfile,
   getProfileSuccess,
-  getProfileError
+  getProfileError,
+  searchUser,
+  searchUserSuccess,
+  searchUserError
 } = authSlice.actions;
 
 export default authSlice.reducer;

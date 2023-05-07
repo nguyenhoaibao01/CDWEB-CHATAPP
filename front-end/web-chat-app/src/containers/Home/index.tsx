@@ -3,7 +3,7 @@ import Editor from "./Editor";
 import ContentChat from "./Content/content";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import Helper from 'utils/Helper';
+import Helper from "utils/Helper";
 import {
   CaretLeftOutlined,
   CaretRightOutlined,
@@ -16,10 +16,17 @@ import "./style.css";
 import { setModelData } from "providers/GeneralProvider/slice";
 import type { MenuProps } from "antd";
 import { Dropdown, Space } from "antd";
-import { getProfile } from 'providers/AuthProvider/slice';
+import { getProfile, searchUser } from "providers/AuthProvider/slice";
+import { useAppSelector } from "store";
+import { SearchOutlined } from "@ant-design/icons";
+import { debounce } from "lodash";
+import { Select } from "antd";
 const { Header, Sider, Content } = Layout;
 const Home = (): JSX.Element => {
   const history = useHistory();
+  const { Option } = Select;
+  const profileUser = useAppSelector((state) => state.auth.profileUser) || {};
+  const userSearch = useAppSelector((state) => state.auth.userSearch) || {};
   const { Search } = Input;
   const dispatch = useDispatch();
   const { Panel } = Collapse;
@@ -71,8 +78,6 @@ const Home = (): JSX.Element => {
     },
   ];
   const openProfile = (data: any) => {
-    console.log("cjcj");
-
     dispatch(setModelData({ visible: true, data }));
   };
   const items: MenuProps["items"] = [
@@ -87,28 +92,36 @@ const Home = (): JSX.Element => {
   ];
   const onClick: MenuProps["onClick"] = ({ key }) => {
     if (key === "1") {
-      console.log("profile");
-      // openProfile()
+      openProfile(profileUser);
     } else {
       localStorage.clear();
-      history.push('/login');
+      history.push("/login");
     }
   };
   useEffect(() => {
     if (!Helper.getAuthToken()) {
-      history.push('/login');
-      window.location.reload();  
+      history.push("/login");
+      window.location.reload();
     }
   }, []);
+  console.log(profileUser);
   useEffect(() => {
-    dispatch(getProfile())
+    dispatch(getProfile());
   }, [Helper.getAuthToken()]);
+
+  const onSearch = (search: string) => {
+    console.log(search);
+    if (search !== "") dispatch(searchUser(search));
+  };
+  const selectUser = (value: string) => {
+    history.push(`/home/${value}`);
+  };
   return (
-    <Layout>
+    <Layout>  
       {!collapsed && (
         <Sider trigger={null} collapsible>
           <div className="logo w-full flex flex-col pb-2 justify-center items-center text-zinc-300">
-            <img className="mt-2" src={logo} />
+            <img className="mt-2" src={logo} alt="Logo chat" />
             <div className="w-10/12 mt-1 bg-violet-700 h-[1px]"></div>
           </div>
           <Collapse
@@ -148,7 +161,7 @@ const Home = (): JSX.Element => {
       )}
       <Layout className="site-layout h-full">
         <Header style={{ padding: 0, background: colorBgContainer }}>
-          <div className="w-full h-full flex justify-between">
+          <div className="w-full h-full flex justify-between item-center">
             <div>
               {React.createElement(
                 collapsed ? CaretRightOutlined : CaretLeftOutlined,
@@ -159,22 +172,38 @@ const Home = (): JSX.Element => {
               )}
               {/* <Search placeholder="input search text" style={{ width: 200 }} /> */}
             </div>
+            <div className="w-4/12 flex items-center h-full">
+              <Select
+                showArrow={false}
+                showSearch
+                placeholder="Search and Select Merchant"
+                onSearch={debounce(onSearch, 1000)}
+                optionFilterProp="children"
+                filterOption={(input, option) =>
+                  option?.props.children
+                    ?.toLowerCase()
+                    .indexOf(input.toLowerCase()) >= 0
+                }
+                onChange={selectUser}
+              >
+                {[userSearch].map((item: any) => {
+                  console.log(item);
+
+                  return <Option value={item?.email}>{item?.email}</Option>;
+                })}
+              </Select>
+            </div>
             <div className="px-4">
               <Dropdown menu={{ items, onClick }}>
-                <a
-                  onClick={(e) => {
-                    console.log(e);
-                  }}
-                >
+                <a>
                   <Space>
-                    <Avatar style={{ backgroundColor: "red" }}> TN</Avatar>
+                    <Avatar style={{ backgroundColor: "red" }}>
+                      {" "}
+                      {profileUser?.email?.substring(0, 1)?.toUpperCase()}
+                    </Avatar>
                   </Space>
                 </a>
               </Dropdown>
-              {/* <Dropdown.Button menu={menu} onClick={handleButtonClick}>
-      Dropdown
-    </Dropdown.Button> */}
-              {/* <span className="mr-2  text-base"> Daisy Nhi</span> */}
             </div>
           </div>
         </Header>

@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import { Avatar, List, message } from "antd";
 import { CaretDownOutlined } from "@ant-design/icons";
 import { setModelData } from "providers/GeneralProvider/slice";
-// import { useAppSelector } from "store";
 import { useDispatch } from "react-redux";
 import VirtualList from "rc-virtual-list";
 import ModelProfile from "./ModelProfile";
+import { useParams } from "react-router-dom";
 
 interface UserItem {
   email: string;
@@ -29,7 +29,7 @@ const ContainerHeight = 400;
 
 const Content = (): JSX.Element => {
   const [data, setData] = useState<UserItem[]>([]);
-const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   const appendData = () => {
     // fetch(fakeDataUrl)
@@ -39,6 +39,14 @@ const dispatch = useDispatch();
     //     message.success(`${body.results.length} more items loaded!`);
     //   });
   };
+  const params: any = useParams();
+
+  const email = params.id;
+  console.log(params);
+  
+  // useEffect(() => {
+  //   dispatch(getProfile());
+  // }, [email]);
 
   useEffect(() => {
     appendData();
@@ -52,20 +60,19 @@ const dispatch = useDispatch();
       appendData();
     }
   };
-  const openProfile = () => {
+  const openProfile = (data: any) => {
     dispatch(setModelData({ visible: true, data }));
   };
   return (
     <div className="w-full h-[80vh]">
       <div
         className="border-b border-slate-400 py-3 w-full flex items-center"
-        onClick={openProfile}
+        onClick={()=>openProfile({email: email})}
       >
         <Avatar style={{ backgroundColor: "red", marginLeft: "8px" }}>
-          {" "}
-          TN
+          {email?.substring(0, 1)?.toUpperCase()}
         </Avatar>
-        <span className="mx-2  text-lg leading-8 font-medium"> Daisy Nhi</span>
+        <span className="mx-2  text-lg leading-8 font-medium"> {email}</span>
         <CaretDownOutlined />
       </div>
       <div className="px-8">
