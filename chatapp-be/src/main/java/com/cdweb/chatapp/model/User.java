@@ -37,7 +37,7 @@ public class User {
     private String address;
     @Column()
     private String avatarUrl;
-    @Column()
+    @Column(length = 100000)
     private String desc;
     @Column()
     private String token;

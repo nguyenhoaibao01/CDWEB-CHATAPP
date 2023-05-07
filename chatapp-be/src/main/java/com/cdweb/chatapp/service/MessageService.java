@@ -1,12 +1,25 @@
 package com.cdweb.chatapp.service;
 
+import com.cdweb.chatapp.model.Message;
+import com.cdweb.chatapp.model.Room;
 import com.cdweb.chatapp.repository.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import java.util.List;
 
 @Service
 public class MessageService {
     @Autowired
     private MessageRepository messageRepository;
+    @Autowired
+    private RoomService roomService;
+
+    public List<Message> loadMessages( long id){
+        Room room = roomService.findById(id);
+//        return room.getMessages();
+        return null;
+    }
 
 }

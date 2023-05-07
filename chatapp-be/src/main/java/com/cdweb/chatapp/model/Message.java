@@ -29,7 +29,7 @@ public class Message {
     private MessageType messageType;
     @Column
     private LocalDateTime sendAt;
-    @Column
+    @Column(length = 100000)
     private String content;
 
 
