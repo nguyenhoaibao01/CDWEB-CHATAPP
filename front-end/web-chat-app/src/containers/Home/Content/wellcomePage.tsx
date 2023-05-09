@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Avatar, List, Button } from "antd";
-import { CaretDownOutlined, UserAddOutlined } from "@ant-design/icons";
+import { Avatar, List, message } from "antd";
+import { CaretDownOutlined } from "@ant-design/icons";
 import { setModelData } from "providers/GeneralProvider/slice";
 import { useDispatch } from "react-redux";
 import VirtualList from "rc-virtual-list";
 import ModelProfile from "./ModelProfile";
 import { useParams } from "react-router-dom";
-import { AvatarGenerator } from "random-avatar-generator";
-import {
-  requestAddFriend,
-} from "providers/AuthProvider/slice";
+
 interface UserItem {
   email: string;
   gender: string;
@@ -31,7 +28,6 @@ interface UserItem {
 const ContainerHeight = 400;
 
 const Content = (): JSX.Element => {
-  const generator = new AvatarGenerator();
   const [data, setData] = useState<UserItem[]>([]);
   const dispatch = useDispatch();
 
@@ -46,8 +42,8 @@ const Content = (): JSX.Element => {
   const params: any = useParams();
 
   const email = params.id;
-  console.log(email);
-
+  console.log(params);
+  
   // useEffect(() => {
   //   dispatch(getProfile());
   // }, [email]);
@@ -67,25 +63,17 @@ const Content = (): JSX.Element => {
   const openProfile = (data: any) => {
     dispatch(setModelData({ visible: true, data }));
   };
-  const handleAddFriend =()=>{
-    console.log("jjjjd");
-    
-    dispatch(requestAddFriend({ receiver: email }));
-  }
   return (
     <div className="w-full h-[80vh]">
-      <div className="py-3 px-5 flex justify-between items-center w-full border-b border-slate-400 ">
-        <div
-          className="w-max flex items-center"
-          onClick={() => openProfile({ email: email })}
-        >
-          <Avatar src={generator.generateRandomAvatar(email)} />
-          <span className="mx-2  text-lg leading-8 font-medium"> {email}</span>
-          <CaretDownOutlined />
-        </div>
-        <Button type="primary" ghost className="mt-3 w-max flex items-center" onClick={handleAddFriend}>
-          <UserAddOutlined /> Add Friend
-        </Button>
+      <div
+        className="border-b border-slate-400 py-3 w-full flex items-center"
+        onClick={()=>openProfile({email: email})}
+      >
+        <Avatar style={{ backgroundColor: "red", marginLeft: "8px" }}>
+          {email?.substring(0, 1)?.toUpperCase()}
+        </Avatar>
+        <span className="mx-2  text-lg leading-8 font-medium"> {email}</span>
+        <CaretDownOutlined />
       </div>
       <div className="px-8">
         <List>
@@ -99,7 +87,7 @@ const Content = (): JSX.Element => {
             {(item: UserItem) => (
               <List.Item key={item.email}>
                 <List.Item.Meta
-                  avatar={<Avatar src={generator.generateRandomAvatar()} />}
+                  avatar={<Avatar src={item.picture.large} />}
                   title={<a href="https://ant.design">{item.name.last}</a>}
                   description={item.email}
                 />
