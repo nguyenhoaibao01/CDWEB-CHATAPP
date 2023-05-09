@@ -20,12 +20,7 @@ public class WebsocketController {
         return message;
     }
 
-    @MessageMapping("/addUser")
-    @SendTo("/chatroom/public")
-    public Message addUser(@Payload Message message, SimpMessageHeaderAccessor headerAccessor) {
-        headerAccessor.getSessionAttributes().put("username", message.getSender().getName());
-        return message;
-    }
+
 
 }
 
