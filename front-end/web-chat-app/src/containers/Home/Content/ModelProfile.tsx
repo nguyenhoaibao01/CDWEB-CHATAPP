@@ -60,7 +60,7 @@ const ModelOption = (props): JSX.Element => {
     dispatch(setModelData({ visible: false }));
   };
 
-  const handleAcceptRequestFriend = (id: string) => {
+  const handleAcceptRequestFriend = (id: number) => {
     dispatch(requestAcceptFriend({ id: id }));
   };
 
@@ -95,7 +95,7 @@ const ModelOption = (props): JSX.Element => {
                     type="primary"
                     ghost
                     className="mt-3 w-max"
-                    onClick={() => handleAcceptRequestFriend(item.sender.email)}
+                    onClick={() => handleAcceptRequestFriend(item.id)}
                   >
                     <MessageOutlined /> Accept
                   </Button>

@@ -6,7 +6,6 @@ import Helper from './Helper';
 
 const service = axios.create({
   baseURL: 'http://localhost:8080/chatapp.api',
-  // withCredentials: true,
   timeout: 90000,
 });
 

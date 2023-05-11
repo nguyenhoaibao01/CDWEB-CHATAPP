@@ -4,6 +4,7 @@ import ContentChat from "./Content/content";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { AvatarGenerator } from "random-avatar-generator";
+import ModelAddGroup from "./Content/ModelAddGroup"
 import Helper from "utils/Helper";
 import {
   CaretLeftOutlined,
@@ -11,11 +12,16 @@ import {
   GlobalOutlined,
   LockOutlined,
   UserOutlined,
+  PlusSquareOutlined,
 } from "@ant-design/icons";
 import { Layout, Collapse, theme, Avatar, Input, Button } from "antd";
 import logo from "../../assets/images/logo.png";
 import "./style.css";
-import { setModelData } from "providers/GeneralProvider/slice";
+import {
+  setModelData,
+  setConfirmModal,
+  resetConfirmModal,
+} from "providers/GeneralProvider/slice";
 import type { MenuProps } from "antd";
 import { Dropdown, Space } from "antd";
 import {
@@ -23,6 +29,7 @@ import {
   searchUser,
   getListAddFriend,
   getAllUser,
+  getAllRoom,
 } from "providers/AuthProvider/slice";
 import { useAppSelector } from "store";
 import { debounce } from "lodash";
@@ -35,7 +42,8 @@ const Home = (): JSX.Element => {
   const profileUser = useAppSelector((state) => state.auth.profileUser) || {};
   const listUser = useAppSelector((state) => state.auth.listUser) || [];
   const userSearch = useAppSelector((state) => state.auth.userSearch) || {};
-  const listFriendRequest = useAppSelector((state) => state.auth.listFriendRequest) || [];
+  const listFriendRequest =
+    useAppSelector((state) => state.auth.listFriendRequest) || [];
   const { Search } = Input;
   const dispatch = useDispatch();
   const { Panel } = Collapse;
@@ -65,6 +73,10 @@ const Home = (): JSX.Element => {
   const openModel = (data: any) => {
     dispatch(setModelData({ visible: true, data }));
   };
+
+  const openModelGroup = (data: any) => {
+    dispatch(setConfirmModal({ visible: true, data: data }));
+  };
   const items: MenuProps["items"] = [
     {
       label: "Profile",
@@ -93,6 +105,7 @@ const Home = (): JSX.Element => {
     dispatch(getProfile());
     dispatch(getListAddFriend());
     dispatch(getAllUser());
+    dispatch(getAllRoom());
   }, [Helper.getAuthToken()]);
 
   // const onSearch = (search: string) => {
@@ -113,13 +126,13 @@ const Home = (): JSX.Element => {
             <div className="w-10/12 mt-1 bg-violet-700 h-[1px]"></div>
           </div>
           <Button
-                type="link"
-                className="mt-3 w-max flex items-center"
-                onClick={()=>openModel(listFriendRequest)}
-              >
-                <UserOutlined />
-                Friend Request list
-              </Button>
+            type="link"
+            className="mt-3 w-max flex items-center"
+            onClick={() => openModel(listFriendRequest)}
+          >
+            <UserOutlined />
+            Friend Request list
+          </Button>
           <Collapse
             defaultActiveKey={["1", "2"]}
             onChange={onChange}
@@ -137,6 +150,13 @@ const Home = (): JSX.Element => {
                     </div>
                   );
                 })}
+              <div
+                className="text-gray-400 py-2 items-center flex text-base w-full pl-2 hover:bg-indigo-700"
+                onClick={() => openModelGroup({})}
+              >
+                <PlusSquareOutlined />{" "}
+                <span className="ml-2"> Add new group</span>
+              </div>
             </Panel>
             <Panel showArrow={false} header="Direct Messages" key="2">
               {listUser.length &&
@@ -161,13 +181,13 @@ const Home = (): JSX.Element => {
         <Header style={{ padding: 0, background: colorBgContainer }}>
           <div className="w-full h-full flex justify-between item-center">
             <div className="flex justify-start item-center w-full gap-4">
-                {React.createElement(
-                  collapsed ? CaretRightOutlined : CaretLeftOutlined,
-                  {
-                    className: "trigger",
-                    onClick: () => setCollapsed(!collapsed),
-                  }
-                )}
+              {React.createElement(
+                collapsed ? CaretRightOutlined : CaretLeftOutlined,
+                {
+                  className: "trigger",
+                  onClick: () => setCollapsed(!collapsed),
+                }
+              )}
               <div className="w-full flex items-center h-full">
                 <Select
                   showArrow={false}
@@ -211,6 +231,7 @@ const Home = (): JSX.Element => {
         >
           <ContentChat />
           <Editor />
+        <ModelAddGroup listUser={listUser}/>
         </Content>
       </Layout>
     </Layout>

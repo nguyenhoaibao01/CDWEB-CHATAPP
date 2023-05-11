@@ -23,13 +23,13 @@ interface User {
 export interface AuthState {
   isLoading: boolean;
   currentUser: unknown;
-  profileUser:   User;
+  profileUser: User;
   isAuthorizing: "idle" | "loading" | "success";
   contentMerchantAgreement: string;
   statusUpdateTC: string;
   userSearch: User;
-  listUser:Array<User>;
-  listFriendRequest:Array<User>;
+  listUser: Array<User>;
+  listFriendRequest: Array<User>;
 }
 
 const initialState = {
@@ -39,8 +39,8 @@ const initialState = {
   contentMerchantAgreement: "",
   statusUpdateTC: "",
   userSearch: {},
-  listUser:{},
-  listFriendRequest:{}
+  listUser: {},
+  listFriendRequest: {},
 } as AuthState;
 
 const authSlice = createSlice({
@@ -48,7 +48,7 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     registerRequest(state, action) {
-      return { ...state, isLoading: true};
+      return { ...state, isLoading: true };
     },
 
     registerRequestError(state, action) {
@@ -56,7 +56,7 @@ const authSlice = createSlice({
     },
 
     loginRequest(state, action) {
-      return { ...state, isLoading: true};
+      return { ...state, isLoading: true };
     },
     loginSuccess(state, action) {
       return {
@@ -66,7 +66,7 @@ const authSlice = createSlice({
     },
     loginError(state, action) {
       // Helper.convertMessage(action.payload);
-      return { ...state, isLoading: false};
+      return { ...state, isLoading: false };
     },
     getProfile(state) {
       return { ...state, isLoading: true };
@@ -80,7 +80,7 @@ const authSlice = createSlice({
     },
     getProfileError(state, action) {
       // Helper.convertMessage(action.payload);
-      return { ...state, isLoading: false};
+      return { ...state, isLoading: false };
     },
     searchUser(state, action) {
       return { ...state, isLoading: false };
@@ -96,20 +96,22 @@ const authSlice = createSlice({
     searchUserError(state, action) {},
     requestAddFriend(state, action) {
       console.log(action.payload);
-      
+
       return { ...state, isLoading: false };
     },
     requestAddFriendSuccess(state, action) {
-      message.success("Friend request sent successfully. Please wait for your friend to accept so you can send messages.")
+      message.success(
+        "Friend request sent successfully. Please wait for your friend to accept so you can send messages."
+      );
     },
     requestAddFriendError(state, action) {
-      message.error("Add Friend Error")
+      message.error("Add Friend Error");
     },
     getListAddFriend(state) {
       return { ...state, isLoading: false };
     },
     getListAddFriendSuccess(state, action) {
-      return { ...state, isLoading: false, listFriendRequest:action.payload };
+      return { ...state, isLoading: false, listFriendRequest: action.payload };
     },
     getListAddFriendError(state) {
       return { ...state, isLoading: false };
@@ -126,21 +128,35 @@ const authSlice = createSlice({
       };
     },
     getAllUserError(state, action) {
-      message.error("Get list all user error")
+      message.error("Get list all user error");
     },
     requestAcceptFriend(state, action) {
       return { ...state, isLoading: false };
     },
     requestAcceptFriendSuccess(state, action) {
-      message.success("Accept friend request success")
+      message.success("Accept friend request success");
       return {
         ...state,
         isLoading: false,
-        listUser: action.payload,
+        // listUser: action.payload,
       };
     },
     requestAcceptFriendError(state, action) {
-      message.error("Accept friend request error")
+      message.error("Accept friend request error");
+    },
+    getAllRoom(state) {
+      return { ...state, isLoading: false };
+    },
+    getAllRoomSuccess(state, action) {
+      message.success("Accept friend request success");
+      return {
+        ...state,
+        isLoading: false,
+        // listUser: action.payload,
+      };
+    },
+    getAllRoomError(state, action) {
+      message.error("Accept friend request error");
     },
   },
 });
@@ -167,9 +183,11 @@ export const {
   getAllUserSuccess,
   getAllUserError,
   requestAcceptFriend,
-  requestAcceptFriendSuccess, 
-  requestAcceptFriendError
-
+  requestAcceptFriendSuccess,
+  requestAcceptFriendError,
+  getAllRoom,
+  getAllRoomSuccess,
+  getAllRoomError
 } = authSlice.actions;
 
 export default authSlice.reducer;

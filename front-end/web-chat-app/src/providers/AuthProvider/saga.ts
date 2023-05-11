@@ -25,7 +25,10 @@ import {
   getAllUserError,
   requestAcceptFriend,
   requestAcceptFriendSuccess, 
-  requestAcceptFriendError
+  requestAcceptFriendError,
+  getAllRoom,
+  getAllRoomSuccess,
+  getAllRoomError
 } from "providers/AuthProvider/slice";
 import { callApi } from "providers/GeneralProvider/saga";
 import api from "utils/service";
@@ -122,6 +125,17 @@ export function* handleRequestAcceptFriend(action: any) {
     yield put(requestAcceptFriendError(error));
   }
 }
+export function* handleGetAllRoom(action: any) {
+  try {
+    console.log(action.payload);
+
+    const { data } = yield callApi(api.get, "rooms");
+    yield put(getAllRoomSuccess(data));
+  } catch (error) {
+    console.log(error);
+    yield put(getAllRoomError(error));
+  }
+}
 
 export default function* watchAuth(): Generator {
   yield takeLeading(registerRequest.type, handleRegisterRequest);
@@ -132,6 +146,9 @@ export default function* watchAuth(): Generator {
   yield takeEvery(getAllUser.type, handleGetAllUser);
   yield takeEvery(requestAddFriend.type, handleRequestAddFriend);
   yield takeEvery(requestAcceptFriend.type, handleRequestAcceptFriend);
+  yield takeEvery(getAllRoom.type, handleGetAllRoom);
+
+  
 
 
 
