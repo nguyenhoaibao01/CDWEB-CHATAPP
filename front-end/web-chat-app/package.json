@@ -19,6 +19,7 @@
     "connected-react-router": "^6.9.1",
     "install": "^0.13.0",
     "npm": "^9.6.2",
+    "random-avatar-generator": "^2.0.0",
     "rc-virtual-list": "^3.4.13",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

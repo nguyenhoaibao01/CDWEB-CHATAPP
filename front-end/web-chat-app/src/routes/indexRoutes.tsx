@@ -38,6 +38,11 @@ const indexRoutes = [
     exact: true,
   },
   {
+    path: "/home/:id",
+    component: Home,
+    exact: true,
+  },
+  {
     path: "/home",
     component: Home,
     exact: true,

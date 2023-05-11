@@ -19,8 +19,10 @@ export function* callApi<T1 extends unknown[]>(
   ...args: T1
 ): Generator<unknown> {
   try {
+    
     return yield call(fn, ...args);
   } catch (error) {
+
     const errorCode = _get(error, 'code');
     console.log('error', error);
 

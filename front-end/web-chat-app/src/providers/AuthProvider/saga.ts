@@ -1,5 +1,5 @@
 import { push } from "connected-react-router";
-import _get from "lodash/get";
+// import _get from "lodash/get";
 import { call, delay, put, takeEvery, takeLeading } from "redux-saga/effects";
 
 import {
@@ -7,19 +7,38 @@ import {
   registerRequestError,
   loginError,
   loginRequest,
-  loginSuccess,
+  // loginSuccess,
+  getProfile,
+  getProfileSuccess,
+  getProfileError,
+  searchUser,
+  searchUserSuccess,
+  searchUserError,
+  requestAddFriend,
+  requestAddFriendSuccess,
+  requestAddFriendError,
+  getListAddFriend,
+  getListAddFriendSuccess,
+  getListAddFriendError,
+  getAllUser,
+  getAllUserSuccess,
+  getAllUserError,
+  requestAcceptFriend,
+  requestAcceptFriendSuccess, 
+  requestAcceptFriendError,
+  getAllRoom,
+  getAllRoomSuccess,
+  getAllRoomError
 } from "providers/AuthProvider/slice";
 import { callApi } from "providers/GeneralProvider/saga";
 import api from "utils/service";
-import apiEncrypt from "utils/fetchApi";
 import Helper from "utils/Helper";
 import { message } from "antd";
-import { log } from "console";
 
 export function* handleRegisterRequest(action: any) {
   try {
     const { data } = yield callApi(api.post, "register", action.payload);
-    console.log(data)
+    console.log(data);
     message.success(data);
     yield put(push("/login"));
     window.location.reload();
@@ -33,68 +52,104 @@ function* handleLogin(action) {
     // NOTE: Replace with your api and configuration
 
     const { data } = yield callApi(api.post, "auth", action.payload);
-    console.log(data);
     if (data) {
       yield put(push("/home"));
       localStorage.setItem("op_token", data);
       window.location.reload();
     }
-    // if (result.code && result.message) {
-    //   yield put(loginError(result));
-    // }
-    // const { data, error } = result;
-
-
-    
-    // const loginAction = _get(data, "loginAction", "");
-    // const termAndConditionStatus = _get(data, "termAndConditionStatus", "NA");
-    // const refreshToken = _get(data, "refreshToken", "");
-    // const otpRefId = _get(data, "otpRefId", "");
-
-    // localStorage.setItem("termAndConditionStatus", termAndConditionStatus);
-
-    // if (!token && loginAction === "CHANGE_PASSWORD") {
-    //   localStorage.setItem("refId", otpRefId);
-    //   if (termAndConditionStatus === "PENDING") {
-    //     yield put(push("/firstLogin/OTPVerification"));
-    //   } else yield put(push("/OTPVerification"));
-    //   window.location.reload();
-    //   // yield put(loginFirstTime());
-    //   return;
-    // }
-
-    // if (!token) {
-    //   yield put(loginError(error));
-    //   return;
-    // }
-
-    // Helper.storeAuthToken(token);
-    // Helper.storeAuthrefreshToken(refreshToken);
-
-    // if (termAndConditionStatus === "PENDING") {
-    //   yield put(push("/merchantAgreement"));
-    //   window.location.reload();
-    //   return;
-    // }
-
-    // const infoUser = yield callApi(api.get, "v1/merchant/user/profile");
-
-    // // yield put(getProfileUserSuccess(infoUser.data));
-
-    // if (infoUser.data.type === "CASHIER") {
-    //   yield put(push("/transactions"));
-    // } else {
-    //   yield put(push("/storeManagement"));
-    // }
-
-    // window.location.reload();
-    // yield put(loginSuccess(null));
   } catch (error) {
     yield put(loginError(error));
+  }
+}
+export function* handleGetProfile(action: any) {
+  try {
+    const { data } = yield callApi(api.get, "users/me");
+    yield put(getProfileSuccess(data));
+  } catch (error) {
+    console.log(error);
+    yield put(getProfileError(error));
+  }
+}
+export function* handleSearchUser(action: any) {
+  try {
+    console.log(action.payload);
+
+    const { data } = yield callApi(api.get, `users/${action.payload}`);
+    yield put(searchUserSuccess(data));
+  } catch (error) {
+    console.log(error);
+    yield put(searchUserError(error));
+  }
+}
+export function* handleRequestAddFriend(action: any) {
+  try {
+    console.log(action.payload);
+
+    const { data } = yield callApi(api.post, "addFriend", action.payload);
+    yield put(requestAddFriendSuccess(data));
+  } catch (error) {
+    console.log(error);
+    yield put(requestAddFriendError(error));
+  }
+}
+export function* handleGetListAddFriend(action: any) {
+  try {
+    console.log(action.payload);
+
+    const { data } = yield callApi(api.get, "addFriendReq/myRequest");
+    yield put(getListAddFriendSuccess(data));
+  } catch (error) {
+    console.log(error);
+    yield put(getListAddFriendError(error));
+  }
+}
+export function* handleGetAllUser(action: any) {
+  try {
+    console.log(action.payload);
+
+    const { data } = yield callApi(api.get, "users");
+    yield put(getAllUserSuccess(data));
+  } catch (error) {
+    console.log(error);
+    yield put(getAllUserError(error));
+  }
+}
+export function* handleRequestAcceptFriend(action: any) {
+  try {
+    console.log(action.payload);
+
+    const { data } = yield callApi(api.post, "acceptFriend", action.payload);
+    yield put(requestAcceptFriendSuccess(data));
+  } catch (error) {
+    console.log(error);
+    yield put(requestAcceptFriendError(error));
+  }
+}
+export function* handleGetAllRoom(action: any) {
+  try {
+    console.log(action.payload);
+
+    const { data } = yield callApi(api.get, "rooms");
+    yield put(getAllRoomSuccess(data));
+  } catch (error) {
+    console.log(error);
+    yield put(getAllRoomError(error));
   }
 }
 
 export default function* watchAuth(): Generator {
   yield takeLeading(registerRequest.type, handleRegisterRequest);
   yield takeLeading(loginRequest.type, handleLogin);
+  yield takeEvery(getProfile.type, handleGetProfile);
+  yield takeEvery(searchUser.type, handleSearchUser);
+  yield takeEvery(getListAddFriend.type, handleGetListAddFriend);
+  yield takeEvery(getAllUser.type, handleGetAllUser);
+  yield takeEvery(requestAddFriend.type, handleRequestAddFriend);
+  yield takeEvery(requestAcceptFriend.type, handleRequestAcceptFriend);
+  yield takeEvery(getAllRoom.type, handleGetAllRoom);
+
+  
+
+
+
 }
