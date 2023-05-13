@@ -1,6 +1,7 @@
 package com.cdweb.chatapp.controller;
 
 import com.cdweb.chatapp.dto.GroupChatDto;
+import com.cdweb.chatapp.dto.RoomDto;
 import com.cdweb.chatapp.model.Room;
 import com.cdweb.chatapp.model.User;
 import com.cdweb.chatapp.service.JwtService;
@@ -27,15 +28,19 @@ public class RoomCotroller {
     private UserService userService;
 
     @GetMapping("/rooms")
-    public List<Room> getAllMyRooms(@RequestHeader("Authorization") String bearerToken) {
+    public List<RoomDto> getAllMyRooms(@RequestHeader("Authorization") String bearerToken) {
         String username = jwtService.extractUsername(bearerToken.substring(7));
-        ArrayList<Room> result = roomService.getAllMyRooms(username);
-        System.out.println("room controoler test" + username);
-        for (Room r : result
+        ArrayList<RoomDto> result = roomService.getAllMyRooms(username);
+
+        for (RoomDto r : result
         ) {
-            System.out.println(r.getId());
+            System.out.println(r.getId()+"-"+r.getMembers().size());
+            for (User u: r.getMembers()
+                 ) {
+                System.out.println(u.getEmail());
+            }
         }
-        System.out.println("so phong " + roomService.getAllMyRooms(username).size());
+
         return result;
 
     }
@@ -50,7 +55,7 @@ public class RoomCotroller {
         if (mems.length == 0) return;
         for (String email : mems
         ) {
-            User user = userService.findByEmail(email).get();
+            User user = userService.findByEmail(email);
             user.addRoom(room);
             room.addMember(user);
         }
@@ -67,7 +72,7 @@ public class RoomCotroller {
         room.setUpdateAt(LocalDateTime.now());
 
         String username = jwtService.extractUsername(bearerToken.substring(7));
-        User creator = userService.findByEmail(username).get();
+        User creator = userService.findByEmail(username);
         room.setAdmin(creator);
         creator.addRoom(room);
         room.addMember(creator);
@@ -76,7 +81,7 @@ public class RoomCotroller {
 
         for (String email : mems
         ) {
-            User user = userService.findByEmail(email).get();
+            User user = userService.findByEmail(email);
             user.addRoom(room);
             room.addMember(user);
         }
@@ -87,7 +92,6 @@ public class RoomCotroller {
 
     @GetMapping("/rooms/{id}/members")
     public List<Room> getMembersInRoom(@PathVariable long id) {
-
         return (List) roomService.getMembersInRoom(id);
 
     }

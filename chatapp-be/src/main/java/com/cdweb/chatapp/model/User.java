@@ -18,10 +18,6 @@ import java.util.*;
 @Entity
 @Table(name = "users")
 public class User {
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private long id;
-
     @Id
     private String email;
     @Column()

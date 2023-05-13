@@ -33,7 +33,7 @@ public class FriendRequestCotroller {
     @GetMapping("/addFriendReq/myRequest")
     public List<AddFriendRequest> getMyAddFriendRequest(@RequestHeader("Authorization") String bearerToken) {
         String username = jwtService.extractUsername(bearerToken.substring(7));
-        User receiver = userService.findByEmail(username).get();
+        User receiver = userService.findByEmail(username);
 
         ArrayList<AddFriendRequest> requests = new ArrayList<>(friendRequestService.getMyAddFriendRequest(receiver));
         return requests;
@@ -45,8 +45,8 @@ public class FriendRequestCotroller {
 
         String username = jwtService.extractUsername(bearerToken.substring(7));
 
-        User sender = userService.findByEmail(username).get();
-        User receiver = userService.findByEmail(addFriendReqDto.getReceiver()).get();
+        User sender = userService.findByEmail(username);
+        User receiver = userService.findByEmail(addFriendReqDto.getReceiver());
 
         AddFriendRequest addFriendRequest = new AddFriendRequest();
         addFriendRequest.setSender(sender);
@@ -65,6 +65,7 @@ public class FriendRequestCotroller {
         Room newRoom = new Room();
         newRoom.addMember(friendRequest.getSender());
         newRoom.addMember(friendRequest.getReceiver());
+//        newRoom.setName(friendRequest.getSender().getName()+friendRequest.getReceiver().getName());
         newRoom.setCreateAt(LocalDateTime.now());
         newRoom.setUpdateAt(LocalDateTime.now());
 
