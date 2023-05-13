@@ -1,47 +1,25 @@
-package com.cdweb.chatapp.model;
+package com.cdweb.chatapp.dto;
 
+import com.cdweb.chatapp.model.Message;
+import com.cdweb.chatapp.model.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Data;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
-
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
-@Builder
-@Entity
-@Table(name = "rooms")
-public class Room implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+@Data
+public class RoomDto {
     private long id;
-    @Column
     private String name;
-    @Column
     private boolean isGroup;
-    @ManyToOne
     private User admin;
-    //    @ManyToOne
-//    private User updateBy;
-    @Column
     private LocalDateTime createAt ;
-    @Column
     private LocalDateTime updateAt;
 
-    @ManyToMany(mappedBy = "rooms")
-//    @JsonIgnore
     private Set<User> members= new HashSet<>();
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JsonIgnore
     private Set<Message> messages= new HashSet<>();
 
 
@@ -53,4 +31,3 @@ public class Room implements Serializable {
         this.members.addAll(users);
     }
 }
-

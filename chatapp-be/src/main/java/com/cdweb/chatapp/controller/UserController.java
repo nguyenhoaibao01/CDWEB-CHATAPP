@@ -2,6 +2,7 @@ package com.cdweb.chatapp.controller;
 
 import com.cdweb.chatapp.dto.AddFriendReqDto;
 import com.cdweb.chatapp.dto.LoginRequest;
+import com.cdweb.chatapp.dto.UserDto;
 import com.cdweb.chatapp.model.AddFriendRequest;
 import com.cdweb.chatapp.model.User;
 import com.cdweb.chatapp.service.AddFriendRequestService;
@@ -11,6 +12,7 @@ import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
@@ -30,9 +32,10 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 @RequestMapping("/chatapp.api")
 public class UserController {
+    private final ModelMapper mapper= new ModelMapper();
     @Autowired
     private UserService userService;
     @Autowired
@@ -91,15 +94,15 @@ public class UserController {
     }
 
     @GetMapping("/users/{username}")
-    public User getUser(@PathVariable String username) {
-        return userService.findById(username).get();
+    public UserDto getUser(@PathVariable String username) {
+        return mapper.map(userService.findByEmail(username),UserDto.class);
     }
 
     @GetMapping("/users/me")
-    public Optional<User> myProfile(@RequestHeader("Authorization") String bearerToken) {
+    public UserDto myProfile(@RequestHeader("Authorization") String bearerToken) {
         String username = jwtService.extractUsername(bearerToken.substring(7));
 
-        return userService.findById(username);
+        return mapper.map(userService.findByEmail(username),UserDto.class);
     }
 //    @PostMapping("/addFriend")
 //    public void addFriendRequest(@RequestHeader("Authorization") String bearerToken, @RequestBody AddFriendReqDto addFriendReqDto) {

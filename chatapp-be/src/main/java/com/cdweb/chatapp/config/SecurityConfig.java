@@ -48,6 +48,7 @@ public class SecurityConfig{
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
+//                .cors().disable()
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/chatapp.api/register", "/verify", "/chatapp.api/auth","/chatapp.api/users").permitAll()
