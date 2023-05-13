@@ -1,11 +1,13 @@
 package com.cdweb.chatapp.service;
 
 import com.cdweb.chatapp.dto.LoginRequest;
+import com.cdweb.chatapp.dto.UserDto;
 import com.cdweb.chatapp.repository.UserRepository;
 import com.cdweb.chatapp.model.User;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import net.bytebuddy.utility.RandomString;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -19,6 +21,9 @@ import java.util.Optional;
 
 @Service
 public class UserService {
+
+    private final ModelMapper mapper= new ModelMapper();
+
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -30,8 +35,8 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public Optional<User> findByEmail(String email) {
-        return userRepository.findByEmail(email);
+    public User findByEmail(String email) {
+        return  userRepository.findByEmail(email).get();
     }
 
     public Optional<User> findById(String id) {
@@ -91,8 +96,12 @@ public class UserService {
     }
 
     public boolean findAccount(LoginRequest loginRequest) {
-        User u = findByEmail(loginRequest.getUsername()).get();
+        User u = findByEmail(loginRequest.getUsername());
         return u != null && loginRequest.getPassword().equals(u.getPassword());
+    }
+
+    public String findNameByEmail(String email){
+        return userRepository.findNameByEmail(email);
     }
 
 }

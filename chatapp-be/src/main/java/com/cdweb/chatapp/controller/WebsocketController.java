@@ -14,8 +14,8 @@ public class WebsocketController {
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
-    @MessageMapping("/message")
-    @SendTo("/chatroom/public")
+    @MessageMapping("/chat")
+    @SendTo("/topic/room/{id}")
     public Message sendMessage(@Payload Message message) {
         return message;
     }
