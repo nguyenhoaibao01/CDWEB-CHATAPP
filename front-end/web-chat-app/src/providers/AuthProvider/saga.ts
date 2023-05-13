@@ -28,7 +28,10 @@ import {
   requestAcceptFriendError,
   getAllRoom,
   getAllRoomSuccess,
-  getAllRoomError
+  getAllRoomError,
+  requestCreateGroup,
+  requestCreateGroupSuccess,
+  requestCreateGroupError
 } from "providers/AuthProvider/slice";
 import { callApi } from "providers/GeneralProvider/saga";
 import api from "utils/service";
@@ -136,6 +139,17 @@ export function* handleGetAllRoom(action: any) {
     yield put(getAllRoomError(error));
   }
 }
+export function* handlerequestCreateGroup(action: any) {
+  try {
+    console.log(action.payload);
+
+    const { data } = yield callApi(api.post, "room", action.payload);
+    yield put(requestCreateGroupSuccess(data));
+  } catch (error) {
+    console.log(error);
+    yield put(requestCreateGroupError(error));
+  }
+}
 
 export default function* watchAuth(): Generator {
   yield takeLeading(registerRequest.type, handleRegisterRequest);
@@ -147,6 +161,8 @@ export default function* watchAuth(): Generator {
   yield takeEvery(requestAddFriend.type, handleRequestAddFriend);
   yield takeEvery(requestAcceptFriend.type, handleRequestAcceptFriend);
   yield takeEvery(getAllRoom.type, handleGetAllRoom);
+  yield takeEvery(requestCreateGroup.type, handlerequestCreateGroup);
+
 
   
 

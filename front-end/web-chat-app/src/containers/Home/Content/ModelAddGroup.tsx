@@ -19,10 +19,10 @@ import {
   resetConfirmModal,
 } from "providers/GeneralProvider/slice";
 import { AvatarGenerator } from "random-avatar-generator";
-import { requestAcceptFriend } from "providers/AuthProvider/slice";
+import { requestCreateGroup } from "providers/AuthProvider/slice";
 const ModelAddGroup = (props: any): JSX.Element => {
   console.log(props.listUser);
-
+  const { Option } = Select;
   const modalData = useAppSelector((state) => state.general.confirmModal);
   const { visible, data } = modalData;
   console.log(visible);
@@ -39,23 +39,24 @@ const ModelAddGroup = (props: any): JSX.Element => {
     dispatch(setConfirmModal({ visible: false, data: data }));
   };
 
-  const handleAcceptRequestFriend = (id: number) => {
-    dispatch(requestAcceptFriend({ id: id }));
-  };
-
   const handleChange = (value: string[]) => {
     console.log(`selected ${value}`);
+  };
+  const handleSubmit = (value: any) => {
+    console.log(value);
+    dispatch(requestCreateGroup(value));
+
   };
   return (
     <>
       <Modal
         title="Basic Modal"
         open={visible}
-        onOk={handleOk}
+        // onOk={handleOk}
         onCancel={() => {
           dispatch(setConfirmModal({ visible: false, data: {} }));
         }}
-        // footer={false}
+        footer={false}
       >
         <Form
           name="wrap"
@@ -65,10 +66,11 @@ const ModelAddGroup = (props: any): JSX.Element => {
           wrapperCol={{ flex: 1 }}
           colon={false}
           style={{ maxWidth: 600 }}
+          onFinish={handleSubmit}
         >
           <Form.Item
             label="Group Name"
-            name="groupName"
+            name="name"
             rules={[{ required: true }]}
           >
             <Input />
@@ -76,25 +78,35 @@ const ModelAddGroup = (props: any): JSX.Element => {
 
           <Form.Item
             label="List users"
-            name="user"
+            name="members"
             rules={[{ required: true }]}
           >
             <Select
+              showSearch
               mode="multiple"
-              allowClear
-              style={{ width: "100%" }}
-              placeholder="Please select"
-              defaultValue={["a10", "c12"]}
+              placeholder="Search and Select User"
+              // onSearch={debounce(onSearch, 1000)}
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                option?.props.children
+                  ?.toLowerCase()
+                  .indexOf(input.toLowerCase()) >= 0
+              }
               onChange={handleChange}
-              options={props.listUser}
-            />
+              style={{ maxWidth: 600 }}
+            >
+              {props.listUser.length &&
+                props.listUser?.map((item: any) => {
+                  return <Option value={item?.email}>{item?.email}</Option>;
+                })}
+            </Select>
           </Form.Item>
 
-          {/* <Form.Item label=" ">
-            <Button type="primary" htmlType="submit">
+          <Form.Item label=" ">
+            <Button type="primary" ghost htmlType="submit">
               Submit
             </Button>
-          </Form.Item> */}
+          </Form.Item>
         </Form>
       </Modal>
     </>

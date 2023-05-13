@@ -76,8 +76,7 @@ const ModelOption = (props): JSX.Element => {
         footer={false}
       >
         <div className="w-full flex flex-col justify-center items-center">
-          {data.length ? (
-            <List
+             {/* <List
               className="w-full"
               dataSource={data}
               renderItem={(item: MyObjectType) => (
@@ -101,8 +100,7 @@ const ModelOption = (props): JSX.Element => {
                   </Button>
                 </List.Item>
               )}
-            />
-          ) : (
+            /> */}
             <Card bordered={false}>
               <Avatar
                 className="my-4 text-center"
@@ -122,7 +120,6 @@ const ModelOption = (props): JSX.Element => {
                 <MessageOutlined /> Messages
               </Button>
             </Card>
-          )}
         </div>
       </Modal>
     </>

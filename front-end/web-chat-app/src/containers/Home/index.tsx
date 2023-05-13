@@ -4,7 +4,7 @@ import ContentChat from "./Content/content";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { AvatarGenerator } from "random-avatar-generator";
-import ModelAddGroup from "./Content/ModelAddGroup"
+import ModelAddGroup from "./Content/ModelAddGroup";
 import Helper from "utils/Helper";
 import {
   CaretLeftOutlined,
@@ -39,37 +39,24 @@ const Home = (): JSX.Element => {
   const generator = new AvatarGenerator();
   const history = useHistory();
   const { Option } = Select;
-  const profileUser = useAppSelector((state) => state.auth.profileUser) || {};
-  const listUser = useAppSelector((state) => state.auth.listUser) || [];
-  const userSearch = useAppSelector((state) => state.auth.userSearch) || {};
-  const listFriendRequest =
-    useAppSelector((state) => state.auth.listFriendRequest) || [];
   const { Search } = Input;
   const dispatch = useDispatch();
   const { Panel } = Collapse;
   const [collapsed, setCollapsed] = useState(false);
+  const [listRomOfUser, setListRomOfUser] = useState<any>([]);
+  const [listGroup, setListGroup] = useState<any>([]);
+
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+  const profileUser = useAppSelector((state) => state.auth.profileUser) || {};
+  const listUser = useAppSelector((state) => state.auth.listUser) || [];
+  const listRoms = useAppSelector((state) => state.auth.listRoms) || [];
+  const userSearch = useAppSelector((state) => state.auth.userSearch) || {};
+  const listFriendRequest =
+    useAppSelector((state) => state.auth.listFriendRequest) || [];
 
   const onChange = (key: string | string[]) => {};
-  const listGroup = [
-    {
-      id: "group001",
-      name: "DH19DTA",
-      public: true,
-    },
-    {
-      id: "group002",
-      name: "DH19DTB",
-      public: false,
-    },
-    {
-      id: "group003",
-      name: "DH19DTC",
-      public: true,
-    },
-  ];
   const openModel = (data: any) => {
     dispatch(setModelData({ visible: true, data }));
   };
@@ -101,6 +88,25 @@ const Home = (): JSX.Element => {
       window.location.reload();
     }
   }, []);
+
+  useEffect(() => {
+    const list:any=[];
+    const listUsers:any=[];
+
+    if (listRoms.length) {
+      listRoms?.filter((item: any) => {
+        if (item?.group) {
+         return list.push(item)
+        }
+        else {
+        return  listUsers.push(item)
+        }
+      });
+      setListGroup(list);
+      setListRomOfUser(listUsers)
+    }
+  }, [listRoms]);
+
   useEffect(() => {
     dispatch(getProfile());
     dispatch(getListAddFriend());
@@ -140,12 +146,13 @@ const Home = (): JSX.Element => {
             className="w-11/12"
           >
             <Panel showArrow={false} header="Chat Group" key="1">
-              {listGroup.length &&
-                listGroup.map((item: any, index: number) => {
+              {listGroup?.length &&
+                listGroup?.map((item: any, index: number) => {
                   return (
-                    <div className="text-gray-400 py-2 items-center flex text-base w-full pl-2 hover:bg-indigo-700">
-                      {item.public && <GlobalOutlined />}
-                      {!item.public && <LockOutlined />}
+                    <div className="text-gray-400 py-2 items-center flex text-base w-full pl-2 hover:bg-indigo-700" onClick={()=> getMessagesById(item.name)}>
+                      {/* {item.public && <GlobalOutlined />}
+                      {!item.public && <LockOutlined />} */}
+                       <GlobalOutlined />
                       <span className="ml-2"> {item?.name}</span>
                     </div>
                   );
@@ -229,9 +236,9 @@ const Home = (): JSX.Element => {
             background: colorBgContainer,
           }}
         >
-          <ContentChat />
+        <ContentChat listRoms={listRoms}/>
           <Editor />
-        <ModelAddGroup listUser={listUser}/>
+          <ModelAddGroup listUser={listUser} />
         </Content>
       </Layout>
     </Layout>

@@ -30,7 +30,9 @@ interface UserItem {
 //   "https://randomuser.me/api/?results=20&inc=name,gender,email,nat,picture&noinfo";
 const ContainerHeight = 400;
 
-const Content = (): JSX.Element => {
+const Content = (props:any): JSX.Element => {
+  console.log(props.listRoms);
+  
   const generator = new AvatarGenerator();
   const [data, setData] = useState<UserItem[]>([]);
   const dispatch = useDispatch();
@@ -67,9 +69,7 @@ const Content = (): JSX.Element => {
   const openProfile = (data: any) => {
     dispatch(setModelData({ visible: true, data }));
   };
-  const handleAddFriend =()=>{
-    console.log("jjjjd");
-    
+  const handleAddFriend =()=>{    
     dispatch(requestAddFriend({ receiver: email }));
   }
   return (
@@ -83,9 +83,9 @@ const Content = (): JSX.Element => {
           <span className="mx-2  text-lg leading-8 font-medium"> {email}</span>
           <CaretDownOutlined />
         </div>
-        <Button type="primary" ghost className="mt-3 w-max flex items-center" onClick={handleAddFriend}>
+        {props?.listRoms.length && props?.listRoms?.find((item:any)=>(item.id !==email)) &&<Button type="primary" ghost className="mt-3 w-max flex items-center" onClick={handleAddFriend}>
           <UserAddOutlined /> Add Friend
-        </Button>
+        </Button>}
       </div>
       <div className="px-8">
         <List>
