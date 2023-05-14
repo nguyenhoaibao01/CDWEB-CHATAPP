@@ -42,7 +42,6 @@ const Content = (): JSX.Element => {
   const params: any = useParams();
 
   const email = params.id;
-  console.log(params);
   
   // useEffect(() => {
   //   dispatch(getProfile());

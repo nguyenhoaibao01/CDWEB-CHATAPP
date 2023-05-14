@@ -24,10 +24,8 @@ const Register = (): JSX.Element => {
 
   const handleForgotPassword = (e: any) => {
     e.preventDefault();
-    // history.push('/forgetPassword');
   };
   const onFinish = (values: any) => {
-    console.log("Received values of form: ", values);
   };
   return (
     <div

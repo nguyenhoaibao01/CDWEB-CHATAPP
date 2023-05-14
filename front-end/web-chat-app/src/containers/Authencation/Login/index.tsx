@@ -32,7 +32,6 @@ const Login = (): JSX.Element => {
     history.push('/forgotPassword');
   };
   const onFinish = (values: any) => {
-    console.log("Received values of form: ", values);
   };
   const routerToRegister =()=>{
     history.push('/register');

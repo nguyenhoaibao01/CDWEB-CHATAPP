@@ -21,12 +21,9 @@ import {
 import { AvatarGenerator } from "random-avatar-generator";
 import { requestCreateGroup } from "providers/AuthProvider/slice";
 const ModelAddGroup = (props: any): JSX.Element => {
-  console.log(props.listUser);
   const { Option } = Select;
   const modalData = useAppSelector((state) => state.general.confirmModal);
   const { visible, data } = modalData;
-  console.log(visible);
-
   const generator = new AvatarGenerator();
 
   const dispatch = useAppDispatch();
@@ -40,10 +37,8 @@ const ModelAddGroup = (props: any): JSX.Element => {
   };
 
   const handleChange = (value: string[]) => {
-    console.log(`selected ${value}`);
   };
   const handleSubmit = (value: any) => {
-    console.log(value);
     dispatch(requestCreateGroup(value));
 
   };
@@ -96,8 +91,8 @@ const ModelAddGroup = (props: any): JSX.Element => {
               style={{ maxWidth: 600 }}
             >
               {props.listUser.length &&
-                props.listUser?.map((item: any) => {
-                  return <Option value={item?.email}>{item?.email}</Option>;
+                props.listUser?.map((item: any, index:number) => {
+                  return <Option key={index} value={item?.email}>{item?.email}</Option>;
                 })}
             </Select>
           </Form.Item>

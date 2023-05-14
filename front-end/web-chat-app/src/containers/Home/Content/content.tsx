@@ -5,11 +5,10 @@ import { setModelData } from "providers/GeneralProvider/slice";
 import { useDispatch } from "react-redux";
 import VirtualList from "rc-virtual-list";
 import ModelProfile from "./ModelProfile";
-import { useParams } from "react-router-dom";
 import { AvatarGenerator } from "random-avatar-generator";
-import {
-  requestAddFriend,
-} from "providers/AuthProvider/slice";
+import { requestAddFriend } from "providers/AuthProvider/slice";
+import Helper from "utils/Helper";
+
 interface UserItem {
   email: string;
   gender: string;
@@ -25,16 +24,15 @@ interface UserItem {
     thumbnail: string;
   };
 }
-
-// const fakeDataUrl =
-//   "https://randomuser.me/api/?results=20&inc=name,gender,email,nat,picture&noinfo";
 const ContainerHeight = 400;
 
-const Content = (props:any): JSX.Element => {
-  console.log(props.listRoms);
-  
+const Content = (props: any): JSX.Element => {
   const generator = new AvatarGenerator();
   const [data, setData] = useState<UserItem[]>([]);
+  const [email, setEmail] = useState<string>("");
+
+  const [dataRom, setDataRom] = useState<UserItem[]>([]);
+
   const dispatch = useDispatch();
 
   const appendData = () => {
@@ -45,16 +43,8 @@ const Content = (props:any): JSX.Element => {
     //     message.success(`${body.results.length} more items loaded!`);
     //   });
   };
-  const params: any = useParams();
-
-  const email = params.id;
-  console.log(email);
-
-  // useEffect(() => {
-  //   dispatch(getProfile());
-  // }, [email]);
-
   useEffect(() => {
+    setEmail(props.profileUser.email);
     appendData();
   }, []);
 
@@ -69,26 +59,33 @@ const Content = (props:any): JSX.Element => {
   const openProfile = (data: any) => {
     dispatch(setModelData({ visible: true, data }));
   };
-  const handleAddFriend =()=>{    
-    dispatch(requestAddFriend({ receiver: email }));
-  }
+
   return (
     <div className="w-full h-[80vh]">
       <div className="py-3 px-5 flex justify-between items-center w-full border-b border-slate-400 ">
         <div
           className="w-max flex items-center"
-          onClick={() => openProfile({ email: email })}
+          onClick={() => openProfile(props.rom)}
         >
-          <Avatar src={generator.generateRandomAvatar(email)} />
-          <span className="mx-2  text-lg leading-8 font-medium"> {email}</span>
+          <Avatar
+            src={generator.generateRandomAvatar(
+              Helper.getEmailUser(props.rom.members, email)
+            )}
+          />
+          {props.rom?.group ? (
+            <span className="mx-2  text-lg leading-8 font-medium">
+              {props.rom?.name}
+            </span>
+          ) : (
+            <span className="mx-2  text-lg leading-8 font-medium">
+              {Helper.getEmailUser(props.rom.members, email) }
+            </span>
+          )}
           <CaretDownOutlined />
         </div>
-        {props?.listRoms.length && props?.listRoms?.find((item:any)=>(item.id !==email)) &&<Button type="primary" ghost className="mt-3 w-max flex items-center" onClick={handleAddFriend}>
-          <UserAddOutlined /> Add Friend
-        </Button>}
       </div>
       <div className="px-8">
-        <List>
+        <List >
           <VirtualList
             data={data}
             height={ContainerHeight}
@@ -108,7 +105,7 @@ const Content = (props:any): JSX.Element => {
           </VirtualList>
         </List>
       </div>
-      <ModelProfile />
+      <ModelProfile profile={props.profileUser}/>
     </div>
   );
 };

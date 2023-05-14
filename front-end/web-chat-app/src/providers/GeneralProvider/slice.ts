@@ -12,6 +12,11 @@ export interface GeneralState {
     visible: boolean;
     data: any;
   };
+
+  modelAccept: {
+    visible: boolean;
+    data: any;
+  };
 }
 
 const initialState = {
@@ -24,6 +29,10 @@ const initialState = {
     visible: false,
     data: {},
   },
+  modelAccept: {
+    visible: false,
+    data: {},
+  },
 } as GeneralState;
 
 const generalSlice = createSlice({
@@ -32,15 +41,25 @@ const generalSlice = createSlice({
   reducers: {
     setFormModal(state, action) {
       const { payload = {} } = action;
-      return { ...state, [payload.key]: payload };
+      return {
+        ...state,
+        modelAccept: {
+          visible: action.payload.visible,
+          data: action.payload.data || state.modelAccept.data,
+        },
+      };
     },
     resetDataFormModal(state, action) {
       const { payload = {} } = action;
-      return { ...state, [payload.key]: null };
+      return {
+        ...state,
+        modelAccept: {
+          ...state.modelData,
+          data: {},
+        },
+      };
     },
     setModelData(state, action) {
-      console.log(action);
-
       return {
         ...state,
         modelData: {

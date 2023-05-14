@@ -31,7 +31,13 @@ import {
   getAllRoomError,
   requestCreateGroup,
   requestCreateGroupSuccess,
-  requestCreateGroupError
+  requestCreateGroupError,
+  requestAddMember,
+  requestAddMemberSuccess,
+  requestAddMemberError,
+  getUserOfRom,
+  getUserOfRomSuccess,
+  getUserOfRomError
 } from "providers/AuthProvider/slice";
 import { callApi } from "providers/GeneralProvider/saga";
 import api from "utils/service";
@@ -41,12 +47,10 @@ import { message } from "antd";
 export function* handleRegisterRequest(action: any) {
   try {
     const { data } = yield callApi(api.post, "register", action.payload);
-    console.log(data);
     message.success(data);
     yield put(push("/login"));
     window.location.reload();
   } catch (error) {
-    console.log(error.message);
     yield put(registerRequestError(error.message));
   }
 }
@@ -75,8 +79,6 @@ export function* handleGetProfile(action: any) {
 }
 export function* handleSearchUser(action: any) {
   try {
-    console.log(action.payload);
-
     const { data } = yield callApi(api.get, `users/${action.payload}`);
     yield put(searchUserSuccess(data));
   } catch (error) {
@@ -86,8 +88,6 @@ export function* handleSearchUser(action: any) {
 }
 export function* handleRequestAddFriend(action: any) {
   try {
-    console.log(action.payload);
-
     const { data } = yield callApi(api.post, "addFriend", action.payload);
     yield put(requestAddFriendSuccess(data));
   } catch (error) {
@@ -97,7 +97,6 @@ export function* handleRequestAddFriend(action: any) {
 }
 export function* handleGetListAddFriend(action: any) {
   try {
-    console.log(action.payload);
 
     const { data } = yield callApi(api.get, "addFriendReq/myRequest");
     yield put(getListAddFriendSuccess(data));
@@ -108,8 +107,6 @@ export function* handleGetListAddFriend(action: any) {
 }
 export function* handleGetAllUser(action: any) {
   try {
-    console.log(action.payload);
-
     const { data } = yield callApi(api.get, "users");
     yield put(getAllUserSuccess(data));
   } catch (error) {
@@ -119,8 +116,6 @@ export function* handleGetAllUser(action: any) {
 }
 export function* handleRequestAcceptFriend(action: any) {
   try {
-    console.log(action.payload);
-
     const { data } = yield callApi(api.post, "acceptFriend", action.payload);
     yield put(requestAcceptFriendSuccess(data));
   } catch (error) {
@@ -130,8 +125,6 @@ export function* handleRequestAcceptFriend(action: any) {
 }
 export function* handleGetAllRoom(action: any) {
   try {
-    console.log(action.payload);
-
     const { data } = yield callApi(api.get, "rooms");
     yield put(getAllRoomSuccess(data));
   } catch (error) {
@@ -139,15 +132,36 @@ export function* handleGetAllRoom(action: any) {
     yield put(getAllRoomError(error));
   }
 }
-export function* handlerequestCreateGroup(action: any) {
+export function* handleRequestCreateGroup(action: any) {
   try {
-    console.log(action.payload);
-
     const { data } = yield callApi(api.post, "room", action.payload);
     yield put(requestCreateGroupSuccess(data));
   } catch (error) {
     console.log(error);
     yield put(requestCreateGroupError(error));
+  }
+}
+
+export function* handleRequestAddMember(action: any) {
+  console.log(action.payload);
+  
+  try {
+    const { data } = yield callApi(api.post, "room/member", action.payload);
+    yield put(requestAddMemberSuccess(data));
+  } catch (error) {
+    console.log(error);
+    yield put(requestAddMemberError(error));
+  }
+}
+export function* handleGetUserOfRom(action: any) {
+  console.log(action.payload.roomId);
+  
+  try {
+    const { data } = yield callApi(api.get, `rooms/${action.payload.roomId}/members`);
+    yield put(getUserOfRomSuccess(data));
+  } catch (error) {
+    console.log(error);
+    yield put(getUserOfRomError(error));
   }
 }
 
@@ -161,7 +175,11 @@ export default function* watchAuth(): Generator {
   yield takeEvery(requestAddFriend.type, handleRequestAddFriend);
   yield takeEvery(requestAcceptFriend.type, handleRequestAcceptFriend);
   yield takeEvery(getAllRoom.type, handleGetAllRoom);
-  yield takeEvery(requestCreateGroup.type, handlerequestCreateGroup);
+  yield takeEvery(requestCreateGroup.type, handleRequestCreateGroup);
+  yield takeEvery(requestAddMember.type, handleRequestAddMember);
+  yield takeEvery(getUserOfRom.type, handleGetUserOfRom);
+
+
 
 
   

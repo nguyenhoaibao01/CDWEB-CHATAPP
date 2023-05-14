@@ -40,6 +40,7 @@ export interface AuthState {
   listUser: Array<User>;
   listFriendRequest: Array<User>;
   listRoms:Array<Rom>;
+  userOfRom:any; 
 }
 
 const initialState = {
@@ -51,7 +52,8 @@ const initialState = {
   userSearch: {},
   listUser: {},
   listFriendRequest: {},
-  listRoms:{}
+  listRoms:{},
+  userOfRom:{},
 } as AuthState;
 
 const authSlice = createSlice({
@@ -97,7 +99,6 @@ const authSlice = createSlice({
       return { ...state, isLoading: false };
     },
     searchUserSuccess(state, action) {
-      console.log(action.payload);
       return {
         ...state,
         isLoading: false,
@@ -106,8 +107,6 @@ const authSlice = createSlice({
     },
     searchUserError(state, action) {},
     requestAddFriend(state, action) {
-      console.log(action.payload);
-
       return { ...state, isLoading: false };
     },
     requestAddFriendSuccess(state, action) {
@@ -131,7 +130,6 @@ const authSlice = createSlice({
       return { ...state, isLoading: false };
     },
     getAllUserSuccess(state, action) {
-      console.log(action.payload);
       return {
         ...state,
         isLoading: false,
@@ -182,6 +180,32 @@ const authSlice = createSlice({
     requestCreateGroupError(state, action) {
       message.error("Create new group error");
     },
+    requestAddMember(state, action) {
+      return { ...state, isLoading: false };
+    },
+    requestAddMemberSuccess(state, action) {
+      message.success("Add member success");
+      return {
+        ...state,
+        isLoading: false,
+      };
+    },
+    requestAddMemberError(state, action) {
+      message.error("Add member error");
+    },
+    getUserOfRom(state, action) {
+      return { ...state, isLoading: false };
+    },
+    getUserOfRomSuccess(state, action) {
+      return {
+        ...state,
+        isLoading: false,
+        userOfRom: action.payload
+      };
+    },
+    getUserOfRomError(state, action) {
+      message.error("get User error");
+    },
   },
 });
 
@@ -214,7 +238,13 @@ export const {
   getAllRoomError,
   requestCreateGroup,
   requestCreateGroupSuccess,
-  requestCreateGroupError
+  requestCreateGroupError,
+  requestAddMember,
+  requestAddMemberSuccess,
+  requestAddMemberError,
+  getUserOfRom,
+  getUserOfRomSuccess,
+  getUserOfRomError
 } = authSlice.actions;
 
 export default authSlice.reducer;

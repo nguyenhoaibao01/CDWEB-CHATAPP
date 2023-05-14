@@ -8,14 +8,20 @@ import {
   Card,
   Avatar,
   List,
+  Select,
 } from "antd";
 import { useEffect, useState } from "react";
-import { MessageOutlined } from "@ant-design/icons";
+import { MessageOutlined, PlusOutlined } from "@ant-design/icons";
 import avatar from "../../../assets/images/avatar.jpg";
 import { useAppDispatch, useAppSelector } from "store";
 import { setModelData, resetModelData } from "providers/GeneralProvider/slice";
 import { AvatarGenerator } from "random-avatar-generator";
-import { requestAcceptFriend } from "providers/AuthProvider/slice";
+import { requestAddMember, getUserOfRom } from "providers/AuthProvider/slice";
+import Helper from "utils/Helper";
+import { log } from "console";
+import _difference from "lodash/difference";
+import VirtualList from "rc-virtual-list";
+import { push } from "connected-react-router";
 type MyObjectType = {
   id: number;
   receiver: {
@@ -43,10 +49,15 @@ type MyObjectType = {
   };
 };
 const ModelOption = (props): JSX.Element => {
+  const ContainerHeight = 400;
+  const { Option } = Select;
   const modalData = useAppSelector((state) => state.general.modelData);
   const { visible, data } = modalData;
   const generator = new AvatarGenerator();
-
+  const listUser = useAppSelector((state) => state.auth.listUser) || [];
+  const userOfRom = useAppSelector((state) => state.auth.userOfRom) || [];
+  const [listNotMember, setListNotMember] = useState([]);
+  
   console.log(data);
 
   const dispatch = useAppDispatch();
@@ -60,10 +71,32 @@ const ModelOption = (props): JSX.Element => {
     dispatch(setModelData({ visible: false }));
   };
 
-  const handleAcceptRequestFriend = (id: number) => {
-    dispatch(requestAcceptFriend({ id: id }));
+  const handleChange = (value: string[]) => {
+    // console.log(`selected ${value}`);
   };
 
+  useEffect(() => {
+    
+    if (data.group) {
+    dispatch(getUserOfRom({roomId: data.id}));
+      const users = listUser.map((item) => item.email);
+      const members = data.members.map((item) => item.email);
+      const list = _difference(users, members);
+      setListNotMember(list);
+    }
+  }, [data]);
+
+
+  const handleAddMember = (value) => {
+    dispatch(
+      requestAddMember({
+        id: data.id,
+        members: value.members,
+      })
+    );
+    dispatch(getUserOfRom({roomId: data.id}));
+
+  };
   return (
     <>
       <Modal
@@ -76,41 +109,104 @@ const ModelOption = (props): JSX.Element => {
         footer={false}
       >
         <div className="w-full flex flex-col justify-center items-center">
-             {/* <List
+          {data.group ? (
+            <Form
               className="w-full"
-              dataSource={data}
-              renderItem={(item: MyObjectType) => (
-                <List.Item key={item.sender.email}>
-                  <List.Item.Meta
-                    avatar={
-                      <Avatar
-                        src={generator.generateRandomAvatar(item.sender.email)}
-                      />
-                    }
-                    title={item.sender.email}
-                    description={item.sender.email}
-                  />
-                  <Button
-                    type="primary"
-                    ghost
-                    className="mt-3 w-max"
-                    onClick={() => handleAcceptRequestFriend(item.id)}
-                  >
-                    <MessageOutlined /> Accept
-                  </Button>
-                </List.Item>
-              )}
-            /> */}
+              layout="vertical"
+              name="wrap"
+              labelCol={{ flex: "110px" }}
+              labelAlign="left"
+              labelWrap
+              wrapperCol={{ flex: 1 }}
+              colon={false}
+              onFinish={handleAddMember}
+            >
+              <Form.Item
+                label="List Not Members"
+                name="members"
+                rules={[{ required: true }]}
+                className="w-full"
+              >
+                <Select
+                  className="w-full h-full"
+                  showSearch
+                  mode="multiple"
+                  placeholder="Search and Select User"
+                  // onSearch={debounce(onSearch, 1000)}
+                  optionFilterProp="children"
+                  filterOption={(input, option) =>
+                    option?.props.children
+                      ?.toLowerCase()
+                      .indexOf(input.toLowerCase()) >= 0
+                  }
+                  size="large"
+                  onChange={handleChange}
+                >
+                  {listNotMember.length &&
+                    listNotMember?.map((item: any, index: number) => {
+                      return (
+                        <Option key={index} value={item}>
+                          <div className="my-2 flex item-center">
+                            {" "}
+                            <Avatar
+                              src={generator.generateRandomAvatar(item)}
+                            />
+                            {item}
+                          </div>
+                        </Option>
+                      );
+                    })}
+                </Select>
+              </Form.Item>
+              <span>List Member</span>
+              <List
+                dataSource={data.members}
+                renderItem={(item: any) => (
+                  <List.Item key={item.email}>
+                    <List.Item.Meta
+                      avatar={
+                        <Avatar
+                          src={generator.generateRandomAvatar(item.email)}
+                        />
+                      }
+                    />
+                    <div className="flex items-start justify-between w-full">
+                      <span>{item.email} </span>
+                      <Button
+                        type="primary"
+                        ghost
+                        className="mt-3 w-max flex items-center"
+                      >
+                        Delete
+                      </Button>
+                    </div>
+                  </List.Item>
+                )}
+              />
+              <Form.Item label=" " className="w-full flex justify-center">
+                <Button
+                  type="primary"
+                  ghost
+                  htmlType="submit"
+                  className="mt-3 w-max flex items-center"
+                >
+                  <PlusOutlined /> Add Member
+                </Button>
+              </Form.Item>
+            </Form>
+          ) : (
             <Card bordered={false}>
               <Avatar
                 className="my-4 text-center"
                 shape="square"
                 size={160}
-                src={generator.generateRandomAvatar(data.email)}
+                src={generator.generateRandomAvatar(
+                  Helper.getEmailUser(data.members, props.profile?.email)
+                )}
               />
               <div className="flex flex-col">
                 <span className="text-base text-gray-600 font-medium leading-8">
-                  {data.email}
+                  {Helper.getEmailUser(data.members, props.profile?.email)}
                 </span>
                 <span className="text-xs font-normal text-gray-400 leading-6">
                   Frontend developer
@@ -120,6 +216,7 @@ const ModelOption = (props): JSX.Element => {
                 <MessageOutlined /> Messages
               </Button>
             </Card>
+          )}
         </div>
       </Modal>
     </>
