@@ -20,6 +20,15 @@ interface User {
   token: null;
   verificationCode: string;
 }
+type Rom = {
+  admin: User | null,
+  id: number,
+  name: string | null,
+  createAt: string,
+  updateAt: string,
+  group: boolean
+}
+
 export interface AuthState {
   isLoading: boolean;
   currentUser: unknown;
@@ -30,6 +39,8 @@ export interface AuthState {
   userSearch: User;
   listUser: Array<User>;
   listFriendRequest: Array<User>;
+  listRoms:Array<Rom>;
+  userOfRom:any; 
 }
 
 const initialState = {
@@ -41,6 +52,8 @@ const initialState = {
   userSearch: {},
   listUser: {},
   listFriendRequest: {},
+  listRoms:{},
+  userOfRom:{},
 } as AuthState;
 
 const authSlice = createSlice({
@@ -86,7 +99,6 @@ const authSlice = createSlice({
       return { ...state, isLoading: false };
     },
     searchUserSuccess(state, action) {
-      console.log(action.payload);
       return {
         ...state,
         isLoading: false,
@@ -95,8 +107,6 @@ const authSlice = createSlice({
     },
     searchUserError(state, action) {},
     requestAddFriend(state, action) {
-      console.log(action.payload);
-
       return { ...state, isLoading: false };
     },
     requestAddFriendSuccess(state, action) {
@@ -120,7 +130,6 @@ const authSlice = createSlice({
       return { ...state, isLoading: false };
     },
     getAllUserSuccess(state, action) {
-      console.log(action.payload);
       return {
         ...state,
         isLoading: false,
@@ -148,15 +157,54 @@ const authSlice = createSlice({
       return { ...state, isLoading: false };
     },
     getAllRoomSuccess(state, action) {
-      message.success("Accept friend request success");
+      return {
+        ...state,
+        isLoading: false,
+        listRoms: action.payload,
+      };
+    },
+    getAllRoomError(state, action) {
+      message.error("Accept friend request error");
+    },
+    requestCreateGroup(state, action) {
+      return { ...state, isLoading: false };
+    },
+    requestCreateGroupSuccess(state, action) {
+      message.success("Create new group success");
       return {
         ...state,
         isLoading: false,
         // listUser: action.payload,
       };
     },
-    getAllRoomError(state, action) {
-      message.error("Accept friend request error");
+    requestCreateGroupError(state, action) {
+      message.error("Create new group error");
+    },
+    requestAddMember(state, action) {
+      return { ...state, isLoading: false };
+    },
+    requestAddMemberSuccess(state, action) {
+      message.success("Add member success");
+      return {
+        ...state,
+        isLoading: false,
+      };
+    },
+    requestAddMemberError(state, action) {
+      message.error("Add member error");
+    },
+    getUserOfRom(state, action) {
+      return { ...state, isLoading: false };
+    },
+    getUserOfRomSuccess(state, action) {
+      return {
+        ...state,
+        isLoading: false,
+        userOfRom: action.payload
+      };
+    },
+    getUserOfRomError(state, action) {
+      message.error("get User error");
     },
   },
 });
@@ -187,7 +235,16 @@ export const {
   requestAcceptFriendError,
   getAllRoom,
   getAllRoomSuccess,
-  getAllRoomError
+  getAllRoomError,
+  requestCreateGroup,
+  requestCreateGroupSuccess,
+  requestCreateGroupError,
+  requestAddMember,
+  requestAddMemberSuccess,
+  requestAddMemberError,
+  getUserOfRom,
+  getUserOfRomSuccess,
+  getUserOfRomError
 } = authSlice.actions;
 
 export default authSlice.reducer;
