@@ -60,6 +60,7 @@ const Content = (props: any): JSX.Element => {
     dispatch(setModelData({ visible: true, data }));
   };
 
+ 
   return (
     <div className="w-full h-[80vh]">
       <div className="py-3 px-5 flex justify-between items-center w-full border-b border-slate-400 ">

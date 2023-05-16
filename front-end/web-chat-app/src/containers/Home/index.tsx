@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
-import Editor from "./Editor";
-import ContentChat from "./Content/content";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { AvatarGenerator } from "random-avatar-generator";
+import over from "stompjs";
+import SocketJs from "sockjs-client";
+import Editor from "./Editor";
+import ContentChat from "./Content/content";
 import ModelAddGroup from "./Content/ModelAddGroup";
 import AddFriend from "./Content/AddFriend";
 import ModelAcceptFriend from "./Content/ModelAcceptFriend";
@@ -15,7 +17,18 @@ import {
   UserOutlined,
   PlusSquareOutlined,
 } from "@ant-design/icons";
-import { Layout, Collapse, theme, Avatar, Input, Button } from "antd";
+import {
+  Layout,
+  Collapse,
+  theme,
+  Avatar,
+  Input,
+  Button,
+  Dropdown,
+  Space,
+  Select,
+  MenuProps,
+} from "antd";
 import logo from "../../assets/images/logo.png";
 import "./style.css";
 import {
@@ -23,8 +36,6 @@ import {
   setConfirmModal,
   setFormModal,
 } from "providers/GeneralProvider/slice";
-import type { MenuProps } from "antd";
-import { Dropdown, Space } from "antd";
 import {
   getProfile,
   searchUser,
@@ -34,7 +45,6 @@ import {
 } from "providers/AuthProvider/slice";
 import { useAppSelector } from "store";
 import { debounce } from "lodash";
-import { Select } from "antd";
 const { Header, Sider, Content } = Layout;
 interface User {
   address: null;
@@ -52,6 +62,7 @@ interface User {
   id: number;
 }
 const Home = (): JSX.Element => {
+  let stompClient;
   const generator = new AvatarGenerator();
   const history = useHistory();
   const { Option } = Select;
@@ -63,7 +74,7 @@ const Home = (): JSX.Element => {
   const [listGroup, setListGroup] = useState<any>([]);
   const [rom, setRom] = useState<any>({});
   const [isAddFriend, setIsAddFriend] = useState<boolean>(false);
-
+  const [privateChats, setPrivateChats] = useState(new Map());  
   const {
     token: { colorBgContainer },
   } = theme.useToken();
@@ -108,6 +119,7 @@ const Home = (): JSX.Element => {
     if (!Helper.getAuthToken()) {
       history.push("/login");
       window.location.reload();
+      registerSocket();
     }
   }, []);
 
@@ -148,6 +160,33 @@ const Home = (): JSX.Element => {
     setRom(rom);
     history.push(`/home/${id}`);
   };
+
+  const registerSocket = () => {
+    let Sock = new SocketJs("http://localhost:8080/ws");
+    stompClient = over(Sock);
+    stompClient.connect({}, onConnected, onError);
+  };
+
+  const onConnected = () => {
+    stompClient.subscribe(`/topic/room/${rom.id}`, onChatMessages);
+  };
+
+  const onError = (err: any) => {
+    console.log(err);
+  };
+  const onChatMessages =(payload:any)=>{
+    console.log(payload);
+    // var payloadData = JSON.parse(payload.body);
+    // if(privateChats.get(payloadData.senderName)){
+    //     privateChats.get(payloadData.senderName).push(payloadData);
+    //     setPrivateChats(new Map(privateChats));
+    // }else{
+    //     let list =[];
+    //     list.push(payloadData);
+    //     privateChats.set(payloadData.senderName,list);
+    //     setPrivateChats(new Map(privateChats));
+    // }
+  }
   return (
     <Layout>
       {!collapsed && (
