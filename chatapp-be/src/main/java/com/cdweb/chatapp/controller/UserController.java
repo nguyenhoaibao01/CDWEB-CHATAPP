@@ -59,7 +59,6 @@ public class UserController {
 
     }
 
-
     @PostMapping("/register")
     public ResponseEntity<String> addNewUser(@RequestBody User newUser, HttpServletRequest request) throws MessagingException, UnsupportedEncodingException {
         boolean ckeckAccount = userService.register(newUser, getSiteURL(request));
@@ -72,7 +71,6 @@ public class UserController {
         String siteURL = request.getRequestURL().toString();
         return siteURL.replace(request.getServletPath(), "");
     }
-
 
 //    =====================================================================================================
 
@@ -104,25 +102,5 @@ public class UserController {
 
         return mapper.map(userService.findByEmail(username),UserDto.class);
     }
-//    @PostMapping("/addFriend")
-//    public void addFriendRequest(@RequestHeader("Authorization") String bearerToken, @RequestBody AddFriendReqDto addFriendReqDto) {
-//
-//        String username = jwtService.extractUsername(bearerToken.substring(7));
-//
-//        User sender = userService.findByEmail(username).get();
-//        User receiver = userService.findByEmail(addFriendReqDto.getReceiver()).get();
-//
-//
-//        AddFriendRequest addFriendRequest = new AddFriendRequest();
-//        addFriendRequest.setSender(sender);
-//        addFriendRequest.setReceiver(receiver);
-//        addFriendRequest.setSendAt(LocalDateTime.now());
-//
-//
-//
-//        System.out.println(username +"haha" + receiver.getEmail());
-//
-//        friendRequestService.sendRequest(addFriendRequest);
-//    }
 
 }

@@ -35,9 +35,11 @@ public class Room implements Serializable {
     private LocalDateTime createAt ;
     @Column
     private LocalDateTime updateAt;
-
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "pin_message_id")
+    private Message pinMessage;
     @ManyToMany(mappedBy = "rooms")
-//    @JsonIgnore
+    @JsonIgnore
     private Set<User> members= new HashSet<>();
 
     @OneToMany(cascade = CascadeType.ALL)
