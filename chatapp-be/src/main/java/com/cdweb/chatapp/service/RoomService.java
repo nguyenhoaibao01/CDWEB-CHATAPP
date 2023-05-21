@@ -15,7 +15,6 @@ import java.util.List;
 @Service
 public class RoomService {
 
-
     private final ModelMapper mapper= new ModelMapper();
     @Autowired
     private RoomRepository roomRepository;
@@ -44,5 +43,7 @@ public class RoomService {
         Room room = findById(id);
         return new ArrayList<>(room.getMembers());
     }
+
+
 
 }

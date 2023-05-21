@@ -22,4 +22,12 @@ public class MessageService {
         return null;
     }
 
+    public Message findById(long id){
+      return  messageRepository.findById(id).get();
+    }
+
+    public List<Message> findMessageByContentContain(Room room, String content){
+        return messageRepository.findMessageByContentContain(room, content);
+    }
+
 }
