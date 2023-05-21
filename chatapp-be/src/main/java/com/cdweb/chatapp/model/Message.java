@@ -6,6 +6,8 @@ import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -29,8 +31,20 @@ public class Message {
     private MessageType messageType;
     @Column
     private LocalDateTime sendAt;
-    @Column(length = 100000)
+    @Lob
+    @Column()
     private String content;
+
+    @Column()
+    private Long replyId;
+    @ManyToMany(mappedBy = "likes")
+    @JsonIgnore
+    private Set<User> likes= new HashSet<>();
+    @ManyToMany(mappedBy = "dislikes")
+    @JsonIgnore
+    private Set<User> dislikes= new HashSet<>();
+
+
 
 
 

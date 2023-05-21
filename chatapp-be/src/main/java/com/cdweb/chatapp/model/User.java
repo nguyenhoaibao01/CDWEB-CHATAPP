@@ -33,7 +33,7 @@ public class User {
     private String address;
     @Column()
     private String avatarUrl;
-    @Column(length = 100000)
+    @Column()
     private String desc;
     @Column()
     private String token;
@@ -43,6 +43,7 @@ public class User {
     private String verificationCode;
     @Column(nullable = false)
     private boolean enable;
+
 
     @OneToMany(mappedBy = "sender")
     @JsonIgnore
@@ -60,6 +61,16 @@ public class User {
     @JoinTable(name = "rooms_members")
     @JsonIgnore
     private Set<Room> rooms = new HashSet<>();
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "users_likes")
+    @JsonIgnore
+    private Set<Room> likes = new HashSet<>();
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "users_dislike")
+    @JsonIgnore
+    private Set<Room> dislikes = new HashSet<>();
 
     public void addRoom(Room r) {
         this.rooms.add(r);

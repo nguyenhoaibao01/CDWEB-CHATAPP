@@ -1,10 +1,13 @@
 package com.cdweb.chatapp.controller;
 
 import com.cdweb.chatapp.dto.GroupChatDto;
+import com.cdweb.chatapp.dto.PinMessageRequest;
 import com.cdweb.chatapp.dto.RoomDto;
+import com.cdweb.chatapp.model.Message;
 import com.cdweb.chatapp.model.Room;
 import com.cdweb.chatapp.model.User;
 import com.cdweb.chatapp.service.JwtService;
+import com.cdweb.chatapp.service.MessageService;
 import com.cdweb.chatapp.service.RoomService;
 import com.cdweb.chatapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +29,8 @@ public class RoomCotroller {
     private JwtService jwtService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private MessageService messageService;
 
     @GetMapping("/rooms")
     public List<RoomDto> getAllMyRooms(@RequestHeader("Authorization") String bearerToken) {
@@ -94,5 +99,20 @@ public class RoomCotroller {
     public List<Room> getMembersInRoom(@PathVariable long id) {
         return (List) roomService.getMembersInRoom(id);
 
+    }
+
+    @PostMapping("/room/pinMessage")
+    public void pinMessage(@RequestBody PinMessageRequest pinMessageRequest){
+        Message message = messageService.findById(pinMessageRequest.getMessageId());
+        Room room = roomService.findById(pinMessageRequest.getRoomId());
+        room.setPinMessage(message);
+        roomService.createNewRoom(room);
+    }
+
+    @GetMapping("/rooms/{roomId}/{content}")
+    public List<Message> findMessageByContentContain(@PathVariable long roomId, @PathVariable String content){
+      Room room = roomService.findById(roomId);
+      System.out.println(roomId + content);
+      return messageService.findMessageByContentContain(room, content);
     }
 }
