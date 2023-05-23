@@ -17,9 +17,9 @@ public class WebsocketController {
 
     @MessageMapping("/chat/{roomId}")
     @SendTo("/room/{roomId}")
-    public void sendMessage(@DestinationVariable String roomId, @Payload Message message) {
-        simpMessagingTemplate.convertAndSend("/room/" + roomId, message);
-
+    public Message sendMessage(@DestinationVariable String roomId, @Payload Message message) {
+//        simpMessagingTemplate.convertAndSend("/room/" + roomId, message);
+        return message;
 
     }
 
