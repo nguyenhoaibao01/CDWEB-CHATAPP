@@ -10,6 +10,7 @@ import ModelAddGroup from "./Content/ModelAddGroup";
 import AddFriend from "./Content/AddFriend";
 import ModelAcceptFriend from "./Content/ModelAcceptFriend";
 import Helper from "utils/Helper";
+import fetchApi from "utils/fetchApi";
 import {
   CaretLeftOutlined,
   CaretRightOutlined,
@@ -119,7 +120,6 @@ const Home = (): JSX.Element => {
     if (!Helper.getAuthToken()) {
       history.push("/login");
       window.location.reload();
-      registerSocket();
     }
   }, []);
 
@@ -145,6 +145,7 @@ const Home = (): JSX.Element => {
     dispatch(getProfile());
     dispatch(getListAddFriend());
     dispatch(getAllUser());
+    registerSocket();
   }, [Helper.getAuthToken()]);
 
   // const onSearch = (search: string) => {
@@ -162,7 +163,13 @@ const Home = (): JSX.Element => {
   };
 
   const registerSocket = () => {
-    let Sock = new SocketJs("http://localhost:8080/ws");
+    console.log("he he");
+    // downloadService.post('/v1/merchant/export/netstar', { merchantIds: dataSelect }).finally(() => {
+    //   setIsDownloading(false);
+    //   setSelectedRowKeys([]);
+    //   dispatch(setSelectMerchant([]));
+    // });
+    let Sock = new SocketJs(fetchApi('ws'));
     stompClient = over(Sock);
     stompClient.connect({}, onConnected, onError);
   };
@@ -318,7 +325,10 @@ const Home = (): JSX.Element => {
           ) : (
             <ContentChat rom={rom} profileUser={profileUser} />
           )}
-          <Editor />
+         {/* <div className="send-message">
+                    <input type="text" className="input-message" placeholder="enter the message" value={userData.message} onChange={handleMessage} /> 
+                    <button type="button" className="send-button" onClick={sendPrivateValue}>send</button>
+                </div> */}
           <ModelAddGroup listUser={listUser} />
           <ModelAcceptFriend />
         </Content>
