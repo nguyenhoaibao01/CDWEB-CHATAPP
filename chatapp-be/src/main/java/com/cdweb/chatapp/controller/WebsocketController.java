@@ -3,6 +3,7 @@ package com.cdweb.chatapp.controller;
 import com.cdweb.chatapp.dto.Chat;
 import com.cdweb.chatapp.model.Message;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -14,17 +15,19 @@ public class WebsocketController {
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
-    @MessageMapping("/chat")
-    @SendTo("/room/{id}")
-    public Message sendMessage(@Payload Message message) {
-        return message;
+    @MessageMapping("/chat/{roomId}")
+    @SendTo("/room/{roomId}")
+    public void sendMessage(@DestinationVariable String roomId, @Payload Message message) {
+        simpMessagingTemplate.convertAndSend("/room/" + roomId, message);
+
+
     }
 
-    @MessageMapping("/sendMessage")
-    @SendTo("/room/public")
-    public Chat message(@Payload Chat chat) {
-        return chat;
-    }
+//    @MessageMapping("/sendMessage")
+//    @SendTo("/room/public")
+//    public Chat message(@Payload Chat chat) {
+//        return chat;
+//    }
 
 }
 
