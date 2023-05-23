@@ -8,6 +8,8 @@ import com.cdweb.chatapp.model.User;
 import com.cdweb.chatapp.service.AddFriendRequestService;
 import com.cdweb.chatapp.service.JwtService;
 import com.cdweb.chatapp.service.UserService;
+import com.sun.mail.iap.Response;
+import com.sun.mail.iap.ResponseHandler;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -15,6 +17,7 @@ import jakarta.servlet.http.HttpSession;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -35,7 +38,7 @@ import java.util.Optional;
 @CrossOrigin(origins = "*")
 @RequestMapping("/chatapp.api")
 public class UserController {
-    private final ModelMapper mapper= new ModelMapper();
+    private final ModelMapper mapper = new ModelMapper();
     @Autowired
     private UserService userService;
     @Autowired
@@ -93,14 +96,32 @@ public class UserController {
 
     @GetMapping("/users/{username}")
     public UserDto getUser(@PathVariable String username) {
-        return mapper.map(userService.findByEmail(username),UserDto.class);
+        return mapper.map(userService.findByEmail(username), UserDto.class);
     }
 
     @GetMapping("/users/me")
     public UserDto myProfile(@RequestHeader("Authorization") String bearerToken) {
         String username = jwtService.extractUsername(bearerToken.substring(7));
 
-        return mapper.map(userService.findByEmail(username),UserDto.class);
+        return mapper.map(userService.findByEmail(username), UserDto.class);
     }
 
+//    @PutMapping("/users/me/update")
+//    public ResponseHandler<String> updateProfile(@RequestHeader("Authorization") String bearerToken, @RequestBody UserDto userDto) {
+//        String username = jwtService.extractUsername(bearerToken.substring(7));
+//        User user = userService.findByEmail(jwtService.extractUsername(bearerToken.substring(7)));
+//        user.setName(userDto.getName());
+//        user.setAvatarUrl(userDto.getAvatarUrl());
+//        user.setAddress(userDto.getAddress());
+//        user.setDesc(userDto.getDesc());
+//        user.setPhone(userDto.getPhone());
+//        try {
+//            userService.save(user);
+//        } catch (Exception e) {
+//            return new ResponseHandler("Không thành công", HttpStatus.BAD_REQUEST.value(),null);
+//
+//        }
+//    }
 }
+
+

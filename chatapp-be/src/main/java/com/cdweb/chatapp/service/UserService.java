@@ -31,6 +31,10 @@ public class UserService {
     @Autowired
     private JavaMailSender mailSender;
 
+    public void save(User user){
+        userRepository.save(user);
+    }
+
     public List<User> findAll() {
         return userRepository.findAll();
     }
