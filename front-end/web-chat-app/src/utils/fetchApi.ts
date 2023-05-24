@@ -8,8 +8,8 @@ const headers = {
   ...(authToken && { Authorization: `Bearer ${Helper.getAuthToken()}` }),
 };
 const fetchApi = (url) => {
-    return fetch(`http://localhost:8080/chatapp.api/${url}`, {
-      // method: 'POST',
+    return fetch(`http://localhost:8080/${url}`, {
+      // method: 'GET',
       headers,
       // body,
     }).then((response) => response.json());

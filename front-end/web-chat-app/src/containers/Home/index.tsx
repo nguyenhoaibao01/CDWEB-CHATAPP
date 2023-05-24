@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { AvatarGenerator } from "random-avatar-generator";
-import over from "stompjs";
-import SocketJs from "sockjs-client";
+import { over } from "stompjs";
+import SockJS from "sockjs-client";
 import Editor from "./Editor";
 import ContentChat from "./Content/content";
 import ModelAddGroup from "./Content/ModelAddGroup";
@@ -63,7 +63,7 @@ interface User {
   id: number;
 }
 const Home = (): JSX.Element => {
-  let stompClient;
+  let stompClient:any =null;
   const generator = new AvatarGenerator();
   const history = useHistory();
   const { Option } = Select;
@@ -75,7 +75,7 @@ const Home = (): JSX.Element => {
   const [listGroup, setListGroup] = useState<any>([]);
   const [rom, setRom] = useState<any>({});
   const [isAddFriend, setIsAddFriend] = useState<boolean>(false);
-  const [privateChats, setPrivateChats] = useState(new Map());  
+  const [privateChats, setPrivateChats] = useState(new Map());
   const {
     token: { colorBgContainer },
   } = theme.useToken();
@@ -145,7 +145,9 @@ const Home = (): JSX.Element => {
     dispatch(getProfile());
     dispatch(getListAddFriend());
     dispatch(getAllUser());
-    registerSocket();
+    setTimeout(()=>(
+      registerSocket()
+    ),1000)
   }, [Helper.getAuthToken()]);
 
   // const onSearch = (search: string) => {
@@ -164,24 +166,21 @@ const Home = (): JSX.Element => {
 
   const registerSocket = () => {
     console.log("he he");
-    // downloadService.post('/v1/merchant/export/netstar', { merchantIds: dataSelect }).finally(() => {
-    //   setIsDownloading(false);
-    //   setSelectedRowKeys([]);
-    //   dispatch(setSelectMerchant([]));
-    // });
-    let Sock = new SocketJs(fetchApi('ws'));
+    let Sock = new SockJS(fetchApi("ws"));
     stompClient = over(Sock);
     stompClient.connect({}, onConnected, onError);
   };
 
   const onConnected = () => {
-    stompClient.subscribe(`/topic/room/${rom.id}`, onChatMessages);
+    console.log(rom.id,"iiii");
+    stompClient.subscribe(fetchApi(`room/${rom.id}`), onChatMessages);
+    userJoin();
   };
 
   const onError = (err: any) => {
     console.log(err);
   };
-  const onChatMessages =(payload:any)=>{
+  const onChatMessages = (payload: any) => {
     console.log(payload);
     // var payloadData = JSON.parse(payload.body);
     // if(privateChats.get(payloadData.senderName)){
@@ -193,7 +192,11 @@ const Home = (): JSX.Element => {
     //     privateChats.set(payloadData.senderName,list);
     //     setPrivateChats(new Map(privateChats));
     // }
-  }
+  };
+  const userJoin=()=>{
+   console.log("hhh");
+   
+}
   return (
     <Layout>
       {!collapsed && (
@@ -325,7 +328,7 @@ const Home = (): JSX.Element => {
           ) : (
             <ContentChat rom={rom} profileUser={profileUser} />
           )}
-         {/* <div className="send-message">
+          {/* <div className="send-message">
                     <input type="text" className="input-message" placeholder="enter the message" value={userData.message} onChange={handleMessage} /> 
                     <button type="button" className="send-button" onClick={sendPrivateValue}>send</button>
                 </div> */}
