@@ -33,31 +33,21 @@ public class SecurityConfig{
 
     private final PasswordConfig passwordEncoder;
 
-//    public SecurityConfig(JwtAuthFilter authFilter, PasswordConfig passwordEncoder) {
-//        this.authFilter = authFilter;
-//        this.passwordEncoder = passwordEncoder;
-//    }
 @Bean
     public UserDetailsService userDetailsService() {
         return new UserInfoUserDetailsService();
     }
-//    @Bean
-//    public AuthenticationManager authenticationManagerBean(HttpSecurity http) throws Exception {
-//        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-//        authenticationManagerBuilder.userDetailsService(userDetailsService()).passwordEncoder(passwordEncoder.passwordEncoder());
-//        return authenticationManagerBuilder.build();
-//    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-//                .cors().disable()
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/chatapp.api/register", "/verify", "/chatapp.api/auth","/chatapp.api/users").permitAll()
+                        .requestMatchers("/", "/chatapp.api/register", "/verify", "/chatapp.api/auth","/chatapp.api/users","/ws/**").permitAll()
                         .anyRequest().authenticated()
+//                        .anyRequest().permitAll()
                 )
-//                .formLogin().defaultSuccessUrl("/users", true)
-//                .and()
+
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()

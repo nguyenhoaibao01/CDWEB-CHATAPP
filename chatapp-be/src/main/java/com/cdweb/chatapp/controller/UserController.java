@@ -90,7 +90,6 @@ public class UserController {
 
     @GetMapping("/users")
     public List<User> getAllUsers() {
-        System.out.println("hâhaa");
         return userService.findAll();
     }
 

@@ -115,4 +115,10 @@ public class RoomCotroller {
       System.out.println(roomId + content);
       return messageService.findMessageByContentContain(room, content);
     }
+
+    @GetMapping("/rooms/{roomId}/messages")
+    public List<Message> getMessages(@PathVariable long roomId){
+
+        return roomService.getMessages(roomId);
+    }
 }
