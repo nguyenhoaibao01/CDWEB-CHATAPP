@@ -30,4 +30,8 @@ public class MessageService {
         return messageRepository.findMessageByContentContain(room, content);
     }
 
+
+    public void save(Message message) {
+        messageRepository.save(message);
+    }
 }

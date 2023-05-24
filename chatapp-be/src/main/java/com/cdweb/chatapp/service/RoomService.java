@@ -1,6 +1,7 @@
 package com.cdweb.chatapp.service;
 
 import com.cdweb.chatapp.dto.RoomDto;
+import com.cdweb.chatapp.model.Message;
 import com.cdweb.chatapp.model.Room;
 import com.cdweb.chatapp.model.User;
 import com.cdweb.chatapp.repository.RoomRepository;
@@ -44,6 +45,8 @@ public class RoomService {
         return new ArrayList<>(room.getMembers());
     }
 
-
+public List<Message> getMessages(long roomId){
+        return new ArrayList<>(roomRepository.findById(roomId).get().getMessages());
+}
 
 }

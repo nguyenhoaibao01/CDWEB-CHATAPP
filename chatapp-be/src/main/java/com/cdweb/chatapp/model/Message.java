@@ -27,8 +27,8 @@ public class Message {
     @ManyToOne()
     @JsonIgnore
     private Room room;
-    @Enumerated(EnumType.STRING)
-    private MessageType messageType;
+//    @Enumerated(EnumType.STRING)
+    private String messageType;
     @Column
     private LocalDateTime sendAt;
     @Lob
