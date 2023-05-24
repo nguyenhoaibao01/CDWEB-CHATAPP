@@ -20,6 +20,7 @@ public class RoomDto {
     private Message pinMessage;
     private Set<User> members= new HashSet<>();
     private Set<Message> messages= new HashSet<>();
+
     public void addMember(User u){
         this.members.add(u);
     }

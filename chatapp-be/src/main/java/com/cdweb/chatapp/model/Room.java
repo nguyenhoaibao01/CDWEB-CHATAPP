@@ -42,10 +42,12 @@ public class Room implements Serializable {
     @JsonIgnore
     private Set<User> members= new HashSet<>();
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JsonIgnore
     private Set<Message> messages= new HashSet<>();
-
+    public void addMessage(Message message){
+        this.messages.add(message);
+    }
 
     public void addMember(User u){
         this.members.add(u);
