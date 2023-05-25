@@ -14,8 +14,8 @@ public class MessageController {
     @Autowired
     private MessageService messageService;
 
-//    @GetMapping("/rooms/{id}/messages")
-//    public List<Message> loadMessages(@PathVariable long id){
-//        return null;
-//    }
+    @GetMapping("/rooms/{id}/messages")
+    public List<Message> loadMessages(@PathVariable long id){
+        return null;
+    }
 }
