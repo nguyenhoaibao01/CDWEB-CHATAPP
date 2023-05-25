@@ -34,18 +34,25 @@ public class WebsocketController {
     @MessageMapping("/chat/{roomId}")
     @SendTo("/room/{roomId}")
     public Message sendMessage(@DestinationVariable String roomId, @Payload MessageRequest messageRequest) {
-        System.out.println("Tin nhan"+ messageRequest.getRoomId());
+        System.out.println("Tin nhan" + messageRequest.getRoomId());
 //        simpMessagingTemplate.convertAndSend("/room/" + roomId, message);
         Room room = roomService.findById(messageRequest.getRoomId());
-
         Message message = new Message();
-        message.setSender(userService.findByEmail(messageRequest.getSender()));
-        message.setMessageType(messageRequest.getMessageType());
-        message.setRoom(room);
-        message.setSendAt(LocalDateTime.now());
-        message.setContent(messageRequest.getContent());
-        message.setReplyId(messageRequest.getReplyId());
+        String messageType = messageRequest.getMessageType();
+        try {
+            if (messageType.equalsIgnoreCase("message") || messageType.equalsIgnoreCase("image") || messageType.equalsIgnoreCase("file") || messageType.equalsIgnoreCase("video")) {
+                message.setSender(userService.findByEmail(messageRequest.getSender()));
+                message.setMessageType(messageRequest.getMessageType());
+                message.setRoom(room);
+                message.setSendAt(LocalDateTime.now());
+                message.setContent(messageRequest.getContent());
+                message.setReplyId(messageRequest.getReplyId());
 
+
+            }
+        } catch (Exception e) {
+            System.out.println();
+        }
         messageService.save(message);
         room.addMessage(message);
         roomService.createNewRoom(room);
