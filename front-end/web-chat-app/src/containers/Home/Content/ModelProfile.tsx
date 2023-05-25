@@ -18,7 +18,6 @@ import { setModelData, resetModelData } from "providers/GeneralProvider/slice";
 import { AvatarGenerator } from "random-avatar-generator";
 import { requestAddMember, getUserOfRom } from "providers/AuthProvider/slice";
 import Helper from "utils/Helper";
-import { log } from "console";
 import _difference from "lodash/difference";
 import VirtualList from "rc-virtual-list";
 import { push } from "connected-react-router";
@@ -58,12 +57,9 @@ const ModelOption = (props): JSX.Element => {
   const userOfRom = useAppSelector((state) => state.auth.userOfRom) || [];
   const [listNotMember, setListNotMember] = useState([]);
   
-  console.log(data);
-
   const dispatch = useAppDispatch();
 
   const handleCancel = (value: boolean) => {
-    console.log(visible, "he he ");
     dispatch(setModelData({ visible: false }));
   };
 

@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from "react";
-import Editor from "./Editor";
-import ContentChat from "./Content/content";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { AvatarGenerator } from "random-avatar-generator";
+import { over } from "stompjs";
+import SockJS from "sockjs-client";
+import Editor from "./Editor";
+import ContentChat from "./Content/content";
 import ModelAddGroup from "./Content/ModelAddGroup";
 import AddFriend from "./Content/AddFriend";
 import ModelAcceptFriend from "./Content/ModelAcceptFriend";
 import Helper from "utils/Helper";
+import fetchApi from "utils/fetchApi";
 import {
   CaretLeftOutlined,
   CaretRightOutlined,
@@ -15,7 +18,18 @@ import {
   UserOutlined,
   PlusSquareOutlined,
 } from "@ant-design/icons";
-import { Layout, Collapse, theme, Avatar, Input, Button } from "antd";
+import {
+  Layout,
+  Collapse,
+  theme,
+  Avatar,
+  Input,
+  Button,
+  Dropdown,
+  Space,
+  Select,
+  MenuProps,
+} from "antd";
 import logo from "../../assets/images/logo.png";
 import "./style.css";
 import {
@@ -23,8 +37,6 @@ import {
   setConfirmModal,
   setFormModal,
 } from "providers/GeneralProvider/slice";
-import type { MenuProps } from "antd";
-import { Dropdown, Space } from "antd";
 import {
   getProfile,
   searchUser,
@@ -32,9 +44,10 @@ import {
   getAllUser,
   getAllRoom,
 } from "providers/AuthProvider/slice";
+import { getMessages } from "providers/MessengerProvider/slice";
 import { useAppSelector } from "store";
 import { debounce } from "lodash";
-import { Select } from "antd";
+import { log } from "console";
 const { Header, Sider, Content } = Layout;
 interface User {
   address: null;
@@ -52,18 +65,20 @@ interface User {
   id: number;
 }
 const Home = (): JSX.Element => {
+  let stompClient: any = null;
   const generator = new AvatarGenerator();
   const history = useHistory();
   const { Option } = Select;
   const { Search } = Input;
   const dispatch = useDispatch();
   const { Panel } = Collapse;
+  const [connected, setConnected] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const [listRomOfUser, setListRomOfUser] = useState<any>([]);
   const [listGroup, setListGroup] = useState<any>([]);
   const [rom, setRom] = useState<any>({});
   const [isAddFriend, setIsAddFriend] = useState<boolean>(false);
-
+  const [privateChats, setPrivateChats] = useState(new Map());
   const {
     token: { colorBgContainer },
   } = theme.useToken();
@@ -138,6 +153,12 @@ const Home = (): JSX.Element => {
   // const onSearch = (search: string) => {
   //   if (search !== "") dispatch(searchUser(search));
   // };
+  useEffect(() => {
+    setTimeout(() => registerSocket(), 1000);
+    console.log(rom.id)
+    dispatch(getMessages(rom.id));
+  }, [rom.id]);
+
   const selectUser = (value: string) => {
     history.push(`/home/${value}`);
     setIsAddFriend(true);
@@ -146,7 +167,45 @@ const Home = (): JSX.Element => {
     setIsAddFriend(false);
     const rom = listRoms.find((rom: any) => rom.id === id);
     setRom(rom);
+    dispatch(getMessages(rom?.id));
     history.push(`/home/${id}`);
+  };
+
+  const registerSocket = () => {
+    console.log("he he");
+    let Sock = new SockJS("http://localhost:8080/ws");
+    stompClient = over(Sock);
+    stompClient.connect({}, onConnected, onError);
+  };
+
+  const onConnected = () => {
+    console.log(stompClient.connected, "iiii");
+    stompClient.subscribe(
+      `http://localhost:8080/room/${rom.id}`,
+      onChatMessages
+    );
+    setConnected(stompClient);
+    userJoin();
+  };
+
+  const onError = (err: any) => {
+    console.log(err);
+  };
+  const onChatMessages = (payload: any) => {
+    console.log(payload);
+    // var payloadData = JSON.parse(payload.body);
+    // if(privateChats.get(payloadData.senderName)){
+    //     privateChats.get(payloadData.senderName).push(payloadData);
+    //     setPrivateChats(new Map(privateChats));
+    // }else{
+    //     let list =[];
+    //     list.push(payloadData);
+    //     privateChats.set(payloadData.senderName,list);
+    //     setPrivateChats(new Map(privateChats));
+    // }
+  };
+  const userJoin = () => {
+    console.log("hhh");
   };
   return (
     <Layout>
@@ -279,7 +338,23 @@ const Home = (): JSX.Element => {
           ) : (
             <ContentChat rom={rom} profileUser={profileUser} />
           )}
-          <Editor />
+          {/* <div className="send-message">
+            <input
+              type="text"
+              className="input-message"
+              placeholder="enter the message"
+              value={userData.message}
+              onChange={handleMessage}
+            />
+            <button
+              type="button"
+              className="send-button"
+              onClick={sendPrivateValue}
+            >
+              send
+            </button>
+          </div> */}
+          <Editor stompClient={connected} sender={profileUser} />
           <ModelAddGroup listUser={listUser} />
           <ModelAcceptFriend />
         </Content>

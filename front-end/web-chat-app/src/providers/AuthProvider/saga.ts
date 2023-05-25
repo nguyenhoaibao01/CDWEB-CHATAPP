@@ -24,7 +24,7 @@ import {
   getAllUserSuccess,
   getAllUserError,
   requestAcceptFriend,
-  requestAcceptFriendSuccess, 
+  requestAcceptFriendSuccess,
   requestAcceptFriendError,
   getAllRoom,
   getAllRoomSuccess,
@@ -37,7 +37,7 @@ import {
   requestAddMemberError,
   getUserOfRom,
   getUserOfRomSuccess,
-  getUserOfRomError
+  getUserOfRomError,
 } from "providers/AuthProvider/slice";
 import { callApi } from "providers/GeneralProvider/saga";
 import api from "utils/service";
@@ -97,7 +97,6 @@ export function* handleRequestAddFriend(action: any) {
 }
 export function* handleGetListAddFriend(action: any) {
   try {
-
     const { data } = yield callApi(api.get, "addFriendReq/myRequest");
     yield put(getListAddFriendSuccess(data));
   } catch (error) {
@@ -144,7 +143,7 @@ export function* handleRequestCreateGroup(action: any) {
 
 export function* handleRequestAddMember(action: any) {
   console.log(action.payload);
-  
+
   try {
     const { data } = yield callApi(api.post, "room/member", action.payload);
     yield put(requestAddMemberSuccess(data));
@@ -154,10 +153,13 @@ export function* handleRequestAddMember(action: any) {
   }
 }
 export function* handleGetUserOfRom(action: any) {
-  console.log(action.payload.roomId);
-  
+  console.log(action.payload.roomId, 'kkkkk');
+
   try {
-    const { data } = yield callApi(api.get, `rooms/${action.payload.roomId}/members`);
+    const { data } = yield callApi(
+      api.get,
+      `rooms/${action.payload.roomId}/members`
+    );
     yield put(getUserOfRomSuccess(data));
   } catch (error) {
     console.log(error);
@@ -178,12 +180,4 @@ export default function* watchAuth(): Generator {
   yield takeEvery(requestCreateGroup.type, handleRequestCreateGroup);
   yield takeEvery(requestAddMember.type, handleRequestAddMember);
   yield takeEvery(getUserOfRom.type, handleGetUserOfRom);
-
-
-
-
-  
-
-
-
 }
