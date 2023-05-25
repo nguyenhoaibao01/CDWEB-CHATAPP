@@ -44,8 +44,10 @@ import {
   getAllUser,
   getAllRoom,
 } from "providers/AuthProvider/slice";
+import { getMessages } from "providers/MessengerProvider/slice";
 import { useAppSelector } from "store";
 import { debounce } from "lodash";
+import { log } from "console";
 const { Header, Sider, Content } = Layout;
 interface User {
   address: null;
@@ -63,13 +65,14 @@ interface User {
   id: number;
 }
 const Home = (): JSX.Element => {
-  let stompClient:any =null;
+  let stompClient: any = null;
   const generator = new AvatarGenerator();
   const history = useHistory();
   const { Option } = Select;
   const { Search } = Input;
   const dispatch = useDispatch();
   const { Panel } = Collapse;
+  const [connected, setConnected] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const [listRomOfUser, setListRomOfUser] = useState<any>([]);
   const [listGroup, setListGroup] = useState<any>([]);
@@ -145,14 +148,17 @@ const Home = (): JSX.Element => {
     dispatch(getProfile());
     dispatch(getListAddFriend());
     dispatch(getAllUser());
-    setTimeout(()=>(
-      registerSocket()
-    ),1000)
   }, [Helper.getAuthToken()]);
 
   // const onSearch = (search: string) => {
   //   if (search !== "") dispatch(searchUser(search));
   // };
+  useEffect(() => {
+    setTimeout(() => registerSocket(), 1000);
+    console.log(rom.id)
+    dispatch(getMessages(rom.id));
+  }, [rom.id]);
+
   const selectUser = (value: string) => {
     history.push(`/home/${value}`);
     setIsAddFriend(true);
@@ -161,19 +167,24 @@ const Home = (): JSX.Element => {
     setIsAddFriend(false);
     const rom = listRoms.find((rom: any) => rom.id === id);
     setRom(rom);
+    dispatch(getMessages(rom?.id));
     history.push(`/home/${id}`);
   };
 
   const registerSocket = () => {
     console.log("he he");
-    let Sock = new SockJS(fetchApi("ws"));
+    let Sock = new SockJS("http://localhost:8080/ws");
     stompClient = over(Sock);
     stompClient.connect({}, onConnected, onError);
   };
 
   const onConnected = () => {
-    console.log(rom.id,"iiii");
-    stompClient.subscribe(fetchApi(`room/${rom.id}`), onChatMessages);
+    console.log(stompClient.connected, "iiii");
+    stompClient.subscribe(
+      `http://localhost:8080/room/${rom.id}`,
+      onChatMessages
+    );
+    setConnected(stompClient);
     userJoin();
   };
 
@@ -193,10 +204,9 @@ const Home = (): JSX.Element => {
     //     setPrivateChats(new Map(privateChats));
     // }
   };
-  const userJoin=()=>{
-   console.log("hhh");
-   
-}
+  const userJoin = () => {
+    console.log("hhh");
+  };
   return (
     <Layout>
       {!collapsed && (
@@ -329,9 +339,22 @@ const Home = (): JSX.Element => {
             <ContentChat rom={rom} profileUser={profileUser} />
           )}
           {/* <div className="send-message">
-                    <input type="text" className="input-message" placeholder="enter the message" value={userData.message} onChange={handleMessage} /> 
-                    <button type="button" className="send-button" onClick={sendPrivateValue}>send</button>
-                </div> */}
+            <input
+              type="text"
+              className="input-message"
+              placeholder="enter the message"
+              value={userData.message}
+              onChange={handleMessage}
+            />
+            <button
+              type="button"
+              className="send-button"
+              onClick={sendPrivateValue}
+            >
+              send
+            </button>
+          </div> */}
+          <Editor stompClient={connected} sender={profileUser} />
           <ModelAddGroup listUser={listUser} />
           <ModelAcceptFriend />
         </Content>
