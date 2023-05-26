@@ -3,6 +3,7 @@ package com.cdweb.chatapp.controller;
 import com.cdweb.chatapp.dto.AddFriendReqDto;
 import com.cdweb.chatapp.dto.LoginRequest;
 import com.cdweb.chatapp.dto.UserDto;
+import com.cdweb.chatapp.dto.UserUpdateRequest;
 import com.cdweb.chatapp.model.AddFriendRequest;
 import com.cdweb.chatapp.model.User;
 import com.cdweb.chatapp.service.AddFriendRequestService;
@@ -105,22 +106,19 @@ public class UserController {
         return mapper.map(userService.findByEmail(username), UserDto.class);
     }
 
-//    @PutMapping("/users/me/update")
-//    public ResponseHandler<String> updateProfile(@RequestHeader("Authorization") String bearerToken, @RequestBody UserDto userDto) {
-//        String username = jwtService.extractUsername(bearerToken.substring(7));
-//        User user = userService.findByEmail(jwtService.extractUsername(bearerToken.substring(7)));
-//        user.setName(userDto.getName());
-//        user.setAvatarUrl(userDto.getAvatarUrl());
-//        user.setAddress(userDto.getAddress());
-//        user.setDesc(userDto.getDesc());
-//        user.setPhone(userDto.getPhone());
-//        try {
-//            userService.save(user);
-//        } catch (Exception e) {
-//            return new ResponseHandler("Không thành công", HttpStatus.BAD_REQUEST.value(),null);
-//
-//        }
-//    }
+    @PutMapping("/users/me/update")
+    public void updateProfile(@RequestHeader("Authorization") String bearerToken, @RequestBody UserUpdateRequest userUpdateRequest) {
+        String username = jwtService.extractUsername(bearerToken.substring(7));
+        User user = userService.findByEmail(jwtService.extractUsername(bearerToken.substring(7)));
+        user.setName(userUpdateRequest.getName());
+        user.setAvatarUrl(userUpdateRequest.getAvatarUrl());
+        user.setAddress(userUpdateRequest.getAddress());
+        user.setDesc(userUpdateRequest.getDesc());
+        user.setPhone(userUpdateRequest.getPhone());
+
+            userService.save(user);
+
+    }
 }
 
 
