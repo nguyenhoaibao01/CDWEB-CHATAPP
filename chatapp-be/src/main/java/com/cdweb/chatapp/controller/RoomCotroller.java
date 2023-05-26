@@ -10,6 +10,7 @@ import com.cdweb.chatapp.service.JwtService;
 import com.cdweb.chatapp.service.MessageService;
 import com.cdweb.chatapp.service.RoomService;
 import com.cdweb.chatapp.service.UserService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @RestController
@@ -31,6 +34,19 @@ public class RoomCotroller {
     private UserService userService;
     @Autowired
     private MessageService messageService;
+
+    private final ModelMapper mapper= new ModelMapper();
+
+    Comparator<Message> comparator = new Comparator<Message> () {
+        @Override
+        public int compare (final Message o1, final Message o2) {
+            if (o1.getSendAt () == null || o2.getSendAt () == null)
+                return 0;
+            return o1.getSendAt ().compareTo (o2.getSendAt ());
+        }
+    };
+
+
 
     @GetMapping("/rooms")
     public List<RoomDto> getAllMyRooms(@RequestHeader("Authorization") String bearerToken) {
@@ -119,6 +135,8 @@ public class RoomCotroller {
     @GetMapping("/rooms/{roomId}/messages")
     public List<Message> getMessages(@PathVariable long roomId){
 
-        return roomService.getMessages(roomId);
+        List messages= roomService.getMessages(roomId);
+        Collections.sort (messages, comparator);
+        return messages;
     }
 }

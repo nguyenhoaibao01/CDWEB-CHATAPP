@@ -22,7 +22,6 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @ManyToOne()
-    @JsonIgnore
     private User sender;
     @ManyToOne()
     @JsonIgnore

@@ -35,7 +35,7 @@ public class WebsocketController {
     @SendTo("/room/{roomId}")
     public Message sendMessage(@DestinationVariable String roomId, @Payload MessageRequest messageRequest) {
         System.out.println("Tin nhan" + messageRequest.getRoomId());
-//        simpMessagingTemplate.convertAndSend("/room/" + roomId, message);
+
         Room room = roomService.findById(messageRequest.getRoomId());
         Message message = new Message();
         String messageType = messageRequest.getMessageType();
@@ -56,6 +56,7 @@ public class WebsocketController {
         messageService.save(message);
         room.addMessage(message);
         roomService.createNewRoom(room);
+        System.out.println(message.getContent());
         return message;
 
     }
