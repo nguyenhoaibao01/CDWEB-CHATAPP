@@ -29,8 +29,6 @@ public class Room implements Serializable {
     private boolean isGroup;
     @ManyToOne
     private User admin;
-    //    @ManyToOne
-//    private User updateBy;
     @Column
     private LocalDateTime createAt ;
     @Column
@@ -38,7 +36,7 @@ public class Room implements Serializable {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "pin_message_id")
     private Message pinMessage;
-    @ManyToMany(mappedBy = "rooms")
+    @ManyToMany(mappedBy = "rooms",cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<User> members= new HashSet<>();
 
@@ -56,5 +54,17 @@ public class Room implements Serializable {
     public void addAllMember(Set<User> users){
         this.members.addAll(users);
     }
+
+    public void deleteMember(String username){
+        for (User u: this.members
+             ) {
+            if(u.getEmail().equals(username)){
+                this.members.remove(u);
+                break;
+            }
+        }
+
+    }
+
 }
 

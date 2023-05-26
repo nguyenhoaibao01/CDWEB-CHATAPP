@@ -75,5 +75,15 @@ public class User {
     public void addRoom(Room r) {
         this.rooms.add(r);
     }
+
+    public void deleteRoom(long roomId){
+        for (Room r : this.rooms
+        ) {
+            if (r.getId() == roomId) {
+                rooms.remove(r);
+                break;
+            }
+        }
+    }
 }
 
