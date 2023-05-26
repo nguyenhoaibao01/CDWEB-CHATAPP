@@ -139,4 +139,10 @@ public class RoomCotroller {
         Collections.sort (messages, comparator);
         return messages;
     }
+
+    @DeleteMapping("/rooms/{roomId}/{username}")
+    public ResponseEntity<String> deleteStudent(@PathVariable Long roomId,@PathVariable String username) {
+        roomService.deleteMember(roomId, username);
+        return ResponseEntity.noContent().build();
+    }
 }

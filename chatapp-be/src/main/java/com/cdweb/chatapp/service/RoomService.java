@@ -12,11 +12,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class RoomService {
 
-    private final ModelMapper mapper= new ModelMapper();
+    private final ModelMapper mapper = new ModelMapper();
     @Autowired
     private RoomRepository roomRepository;
     @Autowired
@@ -35,7 +36,7 @@ public class RoomService {
         ArrayList<RoomDto> roomDtos = new ArrayList<>();
         for (int i = 0; i < rooms.size(); i++) {
 //          RoomDto roomDto=  mapper.map(rooms.get(i), RoomDto.class);
-          roomDtos.add(mapper.map(rooms.get(i), RoomDto.class));
+            roomDtos.add(mapper.map(rooms.get(i), RoomDto.class));
         }
         return roomDtos;
     }
@@ -45,8 +46,17 @@ public class RoomService {
         return new ArrayList<>(room.getMembers());
     }
 
-public List<Message> getMessages(long roomId){
+    public List<Message> getMessages(long roomId) {
         return new ArrayList<>(roomRepository.findById(roomId).get().getMessages());
-}
+    }
 
+    public void deleteMember(Long roomId, String username) {
+        User user = userRepository.findByEmail(username).get();
+        user.deleteRoom(roomId);
+        userRepository.save(user);
+
+        Room room=roomRepository.findById(roomId).get();
+        room.deleteMember(username);
+        roomRepository.save(room);
+    }
 }
