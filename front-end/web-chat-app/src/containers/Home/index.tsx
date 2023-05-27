@@ -9,6 +9,7 @@ import ContentChat from "./Content/content";
 import ModelAddGroup from "./Content/ModelAddGroup";
 import AddFriend from "./Content/AddFriend";
 import ModelAcceptFriend from "./Content/ModelAcceptFriend";
+import WelComePage from "./Content/Welcome";
 import Helper from "utils/Helper";
 import moment from 'moment';
 import {
@@ -337,7 +338,7 @@ const Home = (): JSX.Element => {
             background: colorBgContainer,
           }}
         >
-          <div className="h-full flex flex-col justify-end">
+         { idRoom ? <div className="h-full flex flex-col justify-end">
             <div>
               {" "}
               {isAddFriend ? (
@@ -349,7 +350,9 @@ const Home = (): JSX.Element => {
               <ModelAcceptFriend />
             </div>
             <Editor stompClient={connected} sender={profileUser} rom={rom} />
-          </div>
+          </div>:
+          <WelComePage/>
+          }
         </Content>
       </Layout>
     </Layout>

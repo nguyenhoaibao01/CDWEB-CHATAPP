@@ -63,7 +63,7 @@ function* handleLogin(action) {
 
     const { data } = yield callApi(api.post, "auth", action.payload);
     if (data) {
-      yield put(push("/home/4"));
+      yield put(push("/home"));
       localStorage.setItem("op_token", data);
       window.location.reload();
     }
