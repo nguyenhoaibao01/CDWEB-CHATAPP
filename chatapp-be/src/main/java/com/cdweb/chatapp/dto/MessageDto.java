@@ -17,5 +17,6 @@ public class MessageDto {
         private LocalDateTime sendAt;
         private String content;
         private long replyId;
+        private boolean isPin;
 
 }

@@ -117,13 +117,7 @@ public class RoomCotroller {
 
     }
 
-    @PostMapping("/room/pinMessage")
-    public void pinMessage(@RequestBody PinMessageRequest pinMessageRequest){
-        Message message = messageService.findById(pinMessageRequest.getMessageId());
-        Room room = roomService.findById(pinMessageRequest.getRoomId());
-        room.setPinMessage(message);
-        roomService.createNewRoom(room);
-    }
+
 
     @GetMapping("/rooms/{roomId}/{content}")
     public List<Message> findMessageByContentContain(@PathVariable long roomId, @PathVariable String content){

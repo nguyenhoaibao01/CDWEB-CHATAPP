@@ -30,6 +30,8 @@ public class Message {
     private String messageType;
     @Column
     private LocalDateTime sendAt;
+    @Column
+    private boolean isPin=false;
     @Lob
     @Column()
     private String content;

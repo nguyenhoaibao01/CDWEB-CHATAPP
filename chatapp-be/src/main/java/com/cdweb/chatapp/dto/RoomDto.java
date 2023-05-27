@@ -21,6 +21,7 @@ public class RoomDto {
     private Set<User> members= new HashSet<>();
     private Set<Message> messages= new HashSet<>();
 
+    private int countPin;
     public void addMember(User u){
         this.members.add(u);
     }
