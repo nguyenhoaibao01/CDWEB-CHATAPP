@@ -21,9 +21,9 @@
   border-bottom: 1px solid rgb(97, 5, 196);
   color: rgb(97, 5, 196);
 }
-.ant-dropdown-menu {
+.profile-user .ant-dropdown-menu {
   margin-top: 15px !important;
 }
 .ant-dropdown {
-  min-width: 200px !important;
+  min-width: 150px !important;
 }

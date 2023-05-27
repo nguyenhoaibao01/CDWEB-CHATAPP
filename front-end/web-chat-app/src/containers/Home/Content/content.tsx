@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Avatar, List, Card, Dropdown, MenuProps } from "antd";
-import { CaretDownOutlined, UserAddOutlined } from "@ant-design/icons";
+import { Avatar, List, Card, Dropdown, MenuProps, Space } from "antd";
+import {
+  CaretDownOutlined,
+  UserAddOutlined,
+  MessageOutlined,
+  PushpinOutlined,
+} from "@ant-design/icons";
 import { setModelData } from "providers/GeneralProvider/slice";
 import { useDispatch } from "react-redux";
 import VirtualList from "rc-virtual-list";
@@ -27,11 +32,12 @@ interface UserItem {
     thumbnail: string;
   };
 }
-const ContainerHeight = 710;
+const ContainerHeight = 665;
 
 const Content = (props: any): JSX.Element => {
   const generator = new AvatarGenerator();
   const [data, setData] = useState<UserItem[]>([]);
+  const [showListPin, setShowListPin] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const [dataRom, setDataRom] = useState<UserItem[]>([]);
   const [isShow, setIsShow] = useState<boolean>(false);
@@ -86,8 +92,27 @@ const Content = (props: any): JSX.Element => {
       // history.push("/login");
     }
   };
+  const dataAAA = Array.from({ length: 10 }).map((_, i) => ({
+    href: "https://ant.design",
+    title: `ant design part ${i}`,
+    avatar: `https://xsgames.co/randomusers/avatar.php?g=pixel&key=${i}`,
+    description:
+      "Ant Design, a design language for background applications, is refined by Ant UED Team.",
+    content:
+      "We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.",
+  }));
+
+  const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
+    <Space>
+      {React.createElement(icon)}
+      {text}
+    </Space>
+  );
+  const handlePin = () => {
+    setShowListPin(!showListPin);
+  };
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full content">
       <div className="py-3 px-5 flex justify-between items-center w-full border-b border-slate-400 ">
         <div
           className="w-max flex items-center"
@@ -110,17 +135,56 @@ const Content = (props: any): JSX.Element => {
           <CaretDownOutlined />
         </div>
       </div>
-      <div className="px-8">
+      <div className="border-b border-gray-200 w-full py-2">
+        <span className="px-5" onClick={handlePin}>
+          <PushpinOutlined className="mx-2" />
+          18 pinned
+        </span>
+        <div className="px-3">
+          {showListPin && (
+            <Card className="absolute z-50 w-9/12">
+              <List
+              
+                size="small"
+                dataSource={dataAAA}
+                renderItem={(item) => (
+                  <List.Item
+                    key={item.title}
+                    actions={[
+                      <IconText
+                        icon={MessageOutlined}
+                        text="2"
+                        key="list-vertical-message"
+                      />,
+                    ]}
+                  >
+                    <List.Item.Meta
+                      avatar={<Avatar src={item.avatar} />}
+                      title={<a href={item.href}>{item.title}</a>}
+                      description={item.description}
+                    />
+                  </List.Item>
+                )}
+              />
+            </Card>
+          )}
+        </div>
+      </div>
+      <div className="px-8 ">
         <List>
           <VirtualList
             data={listMessages}
             height={ContainerHeight}
-            itemHeight={100}
+            itemHeight={80}
             itemKey="email"
             onScroll={onScroll}
           >
             {(item: any) => (
-              <Dropdown menu={{ items }}>
+              <Dropdown
+                className="list-message"
+                menu={{ items }}
+                trigger={["click"]}
+              >
                 <List.Item
                   id={item.id}
                   key={item?.email}
