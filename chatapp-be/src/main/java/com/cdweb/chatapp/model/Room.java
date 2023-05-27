@@ -27,6 +27,8 @@ public class Room implements Serializable {
     private String name;
     @Column
     private boolean isGroup;
+    @Column
+    private int countPin;
     @ManyToOne
     private User admin;
     @Column
