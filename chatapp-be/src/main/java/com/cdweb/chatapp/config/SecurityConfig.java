@@ -40,14 +40,14 @@ public class SecurityConfig{
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http
-                .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/chatapp.api/register", "/verify", "/chatapp.api/auth","/chatapp.api/users","/ws/**").permitAll()
-                        .anyRequest().authenticated()
-//                        .anyRequest().permitAll()
-                )
-
+        return    http.csrf()
+                .disable()
+                .authorizeHttpRequests()
+                .requestMatchers("/", "/chatapp.api/register", "/verify", "/chatapp.api/auth","/chatapp.api/users","/ws/**")
+                .permitAll()
+                .anyRequest()
+                .permitAll()
+                .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
@@ -78,7 +78,7 @@ public class SecurityConfig{
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**").allowedOrigins("http://localhost:3000");
+                registry.addMapping("/**").allowedOrigins("http://localhost:8080");
             }
         };
     }
