@@ -10,7 +10,7 @@ import ModelAddGroup from "./Content/ModelAddGroup";
 import AddFriend from "./Content/AddFriend";
 import ModelAcceptFriend from "./Content/ModelAcceptFriend";
 import Helper from "utils/Helper";
-import fetchApi from "utils/fetchApi";
+import moment from 'moment';
 import {
   CaretLeftOutlined,
   CaretRightOutlined,
@@ -47,7 +47,6 @@ import {
 import { getMessages } from "providers/MessengerProvider/slice";
 import { useAppSelector } from "store";
 import { debounce } from "lodash";
-import { log } from "console";
 const { Header, Sider, Content } = Layout;
 interface User {
   address: null;
@@ -155,7 +154,7 @@ const Home = (): JSX.Element => {
   // };
   useEffect(() => {
     setTimeout(() => registerSocket(), 1000);
-    console.log(rom.id)
+    console.log(rom.id);
     dispatch(getMessages(rom.id));
   }, [rom.id]);
 
@@ -208,7 +207,7 @@ const Home = (): JSX.Element => {
     console.log("hhh");
   };
   return (
-    <Layout>
+     <Layout>
       {!collapsed && (
         <Sider trigger={null} collapsible width={300}>
           <div className="logo w-full flex flex-col pb-2 justify-center items-center text-zinc-300">
@@ -327,36 +326,25 @@ const Home = (): JSX.Element => {
           </div>
         </Header>
         <Content
-          className="h-full"
+          className="h-full overflow-hidden"
           style={{
             margin: "16px 16px",
             background: colorBgContainer,
           }}
         >
-          {isAddFriend ? (
-            <AddFriend />
-          ) : (
-            <ContentChat rom={rom} profileUser={profileUser} />
-          )}
-          {/* <div className="send-message">
-            <input
-              type="text"
-              className="input-message"
-              placeholder="enter the message"
-              value={userData.message}
-              onChange={handleMessage}
-            />
-            <button
-              type="button"
-              className="send-button"
-              onClick={sendPrivateValue}
-            >
-              send
-            </button>
-          </div> */}
-          <Editor stompClient={connected} sender={profileUser} />
-          <ModelAddGroup listUser={listUser} />
-          <ModelAcceptFriend />
+          <div className="h-full flex flex-col justify-end">
+            <div>
+              {" "}
+              {isAddFriend ? (
+                <AddFriend />
+              ) : (
+                <ContentChat rom={rom} profileUser={profileUser} />
+              )}
+              <ModelAddGroup listUser={listUser} />
+              <ModelAcceptFriend />
+            </div>
+            <Editor stompClient={connected} sender={profileUser} rom={rom} />
+          </div>
         </Content>
       </Layout>
     </Layout>

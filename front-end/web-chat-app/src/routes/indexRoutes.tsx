@@ -43,11 +43,6 @@ const indexRoutes = [
     exact: true,
   },
   {
-    path: "/home",
-    component: Home,
-    exact: true,
-  },
-  {
     path: '/',
     component: RedirectToLogin,
     exact: true,

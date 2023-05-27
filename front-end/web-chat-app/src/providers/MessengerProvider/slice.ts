@@ -2,9 +2,13 @@ import React from "react";
 
 import { createSlice } from "@reduxjs/toolkit";
 
-export interface MessengerState {}
+export interface MessengerState {
+  listMessages: any;
+}
 
-const initialState = {} as MessengerState;
+const initialState = {
+  listMessages: [],
+} as MessengerState;
 
 const messengerSlice = createSlice({
   name: "messages",
@@ -16,13 +20,12 @@ const messengerSlice = createSlice({
       return { ...state };
     },
     getMessagesSuccess(state, action) {
-      const { payload = {} } = action;
       return {
         ...state,
+        listMessages: action.payload,
       };
     },
     getMessagesError(state, action) {
-      const { payload = {} } = action;
       return {
         ...state,
       };
