@@ -206,6 +206,15 @@ const authSlice = createSlice({
     getUserOfRomError(state, action) {
       message.error("get User error");
     },
+    deleteMember(state, action){
+      return { ...state, isLoading: false };
+    },
+    deleteMemberSuccess(state, action){
+      return { ...state, isLoading: false };
+    },
+    deleteMemberError(state, action){
+      return { ...state, isLoading: false };
+    }
   },
 });
 
@@ -244,7 +253,10 @@ export const {
   requestAddMemberError,
   getUserOfRom,
   getUserOfRomSuccess,
-  getUserOfRomError
+  getUserOfRomError,
+  deleteMember,
+  deleteMemberSuccess,
+  deleteMemberError,
 } = authSlice.actions;
 
 export default authSlice.reducer;

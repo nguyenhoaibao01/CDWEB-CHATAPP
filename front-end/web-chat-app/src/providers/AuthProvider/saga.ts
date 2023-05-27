@@ -38,6 +38,9 @@ import {
   getUserOfRom,
   getUserOfRomSuccess,
   getUserOfRomError,
+  deleteMember,
+  deleteMemberSuccess,
+  deleteMemberError,
 } from "providers/AuthProvider/slice";
 import { callApi } from "providers/GeneralProvider/saga";
 import api from "utils/service";
@@ -166,6 +169,20 @@ export function* handleGetUserOfRom(action: any) {
     yield put(getUserOfRomError(error));
   }
 }
+export function* handleDeleteMember(action: any) {
+  console.log(action.payload.roomId, 'kkkkk');
+
+  try {
+    const { data } = yield callApi(
+      api.delete,
+      `rooms/${action.payload.roomId}/${action.payload.username}`
+    );
+    yield put(deleteMemberSuccess(data));
+  } catch (error) {
+    console.log(error);
+    yield put(deleteMemberError(error));
+  }
+}
 
 export default function* watchAuth(): Generator {
   yield takeLeading(registerRequest.type, handleRegisterRequest);
@@ -180,4 +197,6 @@ export default function* watchAuth(): Generator {
   yield takeEvery(requestCreateGroup.type, handleRequestCreateGroup);
   yield takeEvery(requestAddMember.type, handleRequestAddMember);
   yield takeEvery(getUserOfRom.type, handleGetUserOfRom);
+  yield takeEvery(deleteMember.type, handleDeleteMember);
+
 }

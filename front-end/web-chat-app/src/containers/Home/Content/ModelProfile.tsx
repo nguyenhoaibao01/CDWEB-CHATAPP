@@ -16,7 +16,11 @@ import avatar from "../../../assets/images/avatar.jpg";
 import { useAppDispatch, useAppSelector } from "store";
 import { setModelData, resetModelData } from "providers/GeneralProvider/slice";
 import { AvatarGenerator } from "random-avatar-generator";
-import { requestAddMember, getUserOfRom } from "providers/AuthProvider/slice";
+import {
+  requestAddMember,
+  getUserOfRom,
+  deleteMember,
+} from "providers/AuthProvider/slice";
 import Helper from "utils/Helper";
 import _difference from "lodash/difference";
 import VirtualList from "rc-virtual-list";
@@ -53,10 +57,11 @@ const ModelOption = (props): JSX.Element => {
   const modalData = useAppSelector((state) => state.general.modelData);
   const { visible, data } = modalData;
   const generator = new AvatarGenerator();
+  console.log(data);
   const listUser = useAppSelector((state) => state.auth.listUser) || [];
   const userOfRom = useAppSelector((state) => state.auth.userOfRom) || [];
   const [listNotMember, setListNotMember] = useState([]);
-  
+
   const dispatch = useAppDispatch();
 
   const handleCancel = (value: boolean) => {
@@ -72,16 +77,14 @@ const ModelOption = (props): JSX.Element => {
   };
 
   useEffect(() => {
-    
     if (data.group) {
-    dispatch(getUserOfRom({roomId: data.id}));
+      dispatch(getUserOfRom({ roomId: data.id }));
       const users = listUser.map((item) => item.email);
       const members = data.members.map((item) => item.email);
       const list = _difference(users, members);
       setListNotMember(list);
     }
   }, [data]);
-
 
   const handleAddMember = (value) => {
     dispatch(
@@ -90,8 +93,13 @@ const ModelOption = (props): JSX.Element => {
         members: value.members,
       })
     );
-    dispatch(getUserOfRom({roomId: data.id}));
-
+    dispatch(getUserOfRom({ roomId: data.id }));
+  };
+  const handleRemoveMember = (member: any) => {
+    dispatch(deleteMember({ roomId: data.id, username: member.email }));
+    setTimeout(() => {
+      dispatch(getUserOfRom({ roomId: data.id }));
+    }, 1000);
   };
   return (
     <>
@@ -169,7 +177,8 @@ const ModelOption = (props): JSX.Element => {
                     <div className="flex items-start justify-between w-full">
                       <span>{item.email} </span>
                       <Button
-                        type="primary"
+                        onClick={() => handleRemoveMember(item)}
+                        danger
                         ghost
                         className="mt-3 w-max flex items-center"
                       >
@@ -197,12 +206,15 @@ const ModelOption = (props): JSX.Element => {
                 shape="square"
                 size={160}
                 src={generator.generateRandomAvatar(
-                  Helper.getEmailUser(data.members, props.profile?.email)
+                  data.members
+                    ? Helper.getEmailUser(data.members, props.profile?.email)
+                    : data.email
                 )}
               />
               <div className="flex flex-col">
                 <span className="text-base text-gray-600 font-medium leading-8">
-                  {Helper.getEmailUser(data.members, props.profile?.email)}
+                  {data.members?Helper.getEmailUser(data.members,
+                  props.profile?.email): data.email}
                 </span>
                 <span className="text-xs font-normal text-gray-400 leading-6">
                   Frontend developer

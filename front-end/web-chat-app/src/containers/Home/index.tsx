@@ -9,8 +9,9 @@ import ContentChat from "./Content/content";
 import ModelAddGroup from "./Content/ModelAddGroup";
 import AddFriend from "./Content/AddFriend";
 import ModelAcceptFriend from "./Content/ModelAcceptFriend";
+import WelComePage from "./Content/Welcome";
 import Helper from "utils/Helper";
-import fetchApi from "utils/fetchApi";
+import moment from 'moment';
 import {
   CaretLeftOutlined,
   CaretRightOutlined,
@@ -47,7 +48,8 @@ import {
 import { getMessages } from "providers/MessengerProvider/slice";
 import { useAppSelector } from "store";
 import { debounce } from "lodash";
-import { log } from "console";
+import { useParams } from "react-router-dom";
+
 const { Header, Sider, Content } = Layout;
 interface User {
   address: null;
@@ -65,6 +67,9 @@ interface User {
   id: number;
 }
 const Home = (): JSX.Element => {
+  const params: any = useParams();
+
+  const idRoom = params.id;
   let stompClient: any = null;
   const generator = new AvatarGenerator();
   const history = useHistory();
@@ -155,8 +160,8 @@ const Home = (): JSX.Element => {
   // };
   useEffect(() => {
     setTimeout(() => registerSocket(), 1000);
-    console.log(rom.id)
-    dispatch(getMessages(rom.id));
+    console.log(rom.id);
+    dispatch(getMessages(idRoom));
   }, [rom.id]);
 
   const selectUser = (value: string) => {
@@ -167,7 +172,7 @@ const Home = (): JSX.Element => {
     setIsAddFriend(false);
     const rom = listRoms.find((rom: any) => rom.id === id);
     setRom(rom);
-    dispatch(getMessages(rom?.id));
+    dispatch(getMessages(idRoom));
     history.push(`/home/${id}`);
   };
 
@@ -181,7 +186,7 @@ const Home = (): JSX.Element => {
   const onConnected = () => {
     console.log(stompClient.connected, "iiii");
     stompClient.subscribe(
-      `http://localhost:8080/room/${rom.id}`,
+      `http://localhost:8080/room/${idRoom}`,
       onChatMessages
     );
     setConnected(stompClient);
@@ -208,7 +213,7 @@ const Home = (): JSX.Element => {
     console.log("hhh");
   };
   return (
-    <Layout>
+     <Layout>
       {!collapsed && (
         <Sider trigger={null} collapsible width={300}>
           <div className="logo w-full flex flex-col pb-2 justify-center items-center text-zinc-300">
@@ -313,7 +318,7 @@ const Home = (): JSX.Element => {
                 </Select>
               </div>
             </div>
-            <div className="px-4">
+            <div className="px-4 profile-user">
               <Dropdown menu={{ items, onClick }}>
                 <a>
                   <Space>
@@ -327,36 +332,27 @@ const Home = (): JSX.Element => {
           </div>
         </Header>
         <Content
-          className="h-full"
+          className="h-full overflow-hidden"
           style={{
             margin: "16px 16px",
             background: colorBgContainer,
           }}
         >
-          {isAddFriend ? (
-            <AddFriend />
-          ) : (
-            <ContentChat rom={rom} profileUser={profileUser} />
-          )}
-          {/* <div className="send-message">
-            <input
-              type="text"
-              className="input-message"
-              placeholder="enter the message"
-              value={userData.message}
-              onChange={handleMessage}
-            />
-            <button
-              type="button"
-              className="send-button"
-              onClick={sendPrivateValue}
-            >
-              send
-            </button>
-          </div> */}
-          <Editor stompClient={connected} sender={profileUser} />
-          <ModelAddGroup listUser={listUser} />
-          <ModelAcceptFriend />
+         { idRoom ? <div className="h-full flex flex-col justify-end">
+            <div>
+              {" "}
+              {isAddFriend ? (
+                <AddFriend />
+              ) : (
+                <ContentChat rom={rom} profileUser={profileUser} />
+              )}
+              <ModelAddGroup listUser={listUser} />
+              <ModelAcceptFriend />
+            </div>
+            <Editor stompClient={connected} sender={profileUser} rom={rom} />
+          </div>:
+          <WelComePage/>
+          }
         </Content>
       </Layout>
     </Layout>
