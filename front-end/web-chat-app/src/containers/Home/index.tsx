@@ -11,7 +11,7 @@ import AddFriend from "./Content/AddFriend";
 import ModelAcceptFriend from "./Content/ModelAcceptFriend";
 import WelComePage from "./Content/Welcome";
 import Helper from "utils/Helper";
-import moment from 'moment';
+import moment from "moment";
 import {
   CaretLeftOutlined,
   CaretRightOutlined,
@@ -83,6 +83,7 @@ const Home = (): JSX.Element => {
   const [listGroup, setListGroup] = useState<any>([]);
   const [rom, setRom] = useState<any>({});
   const [isAddFriend, setIsAddFriend] = useState<boolean>(false);
+  const [idFriend, setIdFriend] = useState<string>("");
   const [privateChats, setPrivateChats] = useState(new Map());
   const {
     token: { colorBgContainer },
@@ -166,6 +167,7 @@ const Home = (): JSX.Element => {
 
   const selectUser = (value: string) => {
     history.push(`/home/${value}`);
+    setIdFriend(value);
     setIsAddFriend(true);
   };
   const getMessagesById = (id: number) => {
@@ -197,23 +199,39 @@ const Home = (): JSX.Element => {
     console.log(err);
   };
   const onChatMessages = (payload: any) => {
-    console.log(payload);
-    // var payloadData = JSON.parse(payload.body);
-    // if(privateChats.get(payloadData.senderName)){
-    //     privateChats.get(payloadData.senderName).push(payloadData);
-    //     setPrivateChats(new Map(privateChats));
-    // }else{
-    //     let list =[];
-    //     list.push(payloadData);
-    //     privateChats.set(payloadData.senderName,list);
-    //     setPrivateChats(new Map(privateChats));
-    // }
+    console.log("ahi hi", payload);
+    var payloadData: any = JSON.parse(payload);
+    if (privateChats.get(payloadData.senderName)) {
+      privateChats.get(payloadData.senderName).push(payloadData);
+      setPrivateChats(new Map(privateChats));
+    } else {
+      let list:any = [];
+      list.push(payloadData);
+      privateChats.set(payloadData.senderName, list);
+      setPrivateChats(new Map(privateChats));
+      console.log(privateChats);
+      
+    }
   };
   const userJoin = () => {
-    console.log("hhh");
+    // console.log("hhh");
+    // var chatMessage = {
+    //   sender: profileUser?.email,
+    //   roomId: idRoom,
+    // };
+    // console.log(chatMessage);
+    // stompClient.send(
+    //   `/app/chat/${idRoom}`,
+    //   {},
+    //   JSON.stringify(chatMessage)
+    // );
+    // var chatMessage = {
+    //   senderName: userData.username,
+    //   status:"JOIN"
+    // };
   };
   return (
-     <Layout>
+    <Layout>
       {!collapsed && (
         <Sider trigger={null} collapsible width={300}>
           <div className="logo w-full flex flex-col pb-2 justify-center items-center text-zinc-300">
@@ -338,21 +356,23 @@ const Home = (): JSX.Element => {
             background: colorBgContainer,
           }}
         >
-         { idRoom ? <div className="h-full flex flex-col justify-end">
-            <div>
-              {" "}
-              {isAddFriend ? (
-                <AddFriend />
-              ) : (
-                <ContentChat rom={rom} profileUser={profileUser} />
-              )}
-              <ModelAddGroup listUser={listUser} />
-              <ModelAcceptFriend />
+          {idRoom ? (
+            <div className="h-full flex flex-col justify-end">
+              <div>
+                {" "}
+                {isAddFriend ? (
+                  <AddFriend idFriend={idFriend} />
+                ) : (
+                  <ContentChat rom={rom} profileUser={profileUser} />
+                )}
+                <ModelAddGroup listUser={listUser} />
+                <ModelAcceptFriend />
+              </div>
+              <Editor stompClient={connected} sender={profileUser} rom={rom} />
             </div>
-            <Editor stompClient={connected} sender={profileUser} rom={rom} />
-          </div>:
-          <WelComePage/>
-          }
+          ) : (
+            <WelComePage />
+          )}
         </Content>
       </Layout>
     </Layout>

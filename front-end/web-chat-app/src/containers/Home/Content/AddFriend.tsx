@@ -10,14 +10,20 @@ import ModelProfile from "./ModelProfile";
 import { useParams } from "react-router-dom";
 import { AvatarGenerator } from "random-avatar-generator";
 import { requestAddFriend } from "providers/AuthProvider/slice";
+import { useEffect, useState } from "react";
 
-const Content = (): JSX.Element => {
+const AddFriend = (props): JSX.Element => {
   const dispatch = useDispatch();
   const generator = new AvatarGenerator();
   const params: any = useParams();
+  const [dataUser, setDataUser] = useState(props.idFriend);
 
-  const dataUser = params.id;
-
+  useEffect(() => {
+    setTimeout(() => {
+      setDataUser(params.id);
+      console.log(dataUser, "he hekkkkkk");
+    }, 500);
+  }, []);
   const handleAddFriend = () => {
     dispatch(requestAddFriend({ receiver: dataUser }));
   };
@@ -42,15 +48,18 @@ const Content = (): JSX.Element => {
         </Button>
       </div>
       <div className="flex flex-col h-full justify-center items-center w-full">
-            <div className="text-base text-gray-800 font-medium leading-8 mb-10" >Make friends with <span className="text-red-600">{dataUser}</span> for the purpose of connecting and chatting!!</div>
+        <div className="text-base text-gray-800 font-medium leading-8 mb-10">
+          Make friends with <span className="text-red-600">{dataUser}</span> for
+          the purpose of connecting and chatting!!
+        </div>
         <Card bordered={false} className="w-6/12">
           <div className="flex flex-col items-center justify-center">
-          <Avatar
-            className="my-4 text-center"
-            shape="square"
-            size={260}
-            src={generator.generateRandomAvatar(dataUser)}
-          />
+            <Avatar
+              className="my-4 text-center"
+              shape="square"
+              size={260}
+              src={generator.generateRandomAvatar(dataUser)}
+            />
             <span className="text-lg text-gray-600 font-medium leading-8">
               {dataUser}
             </span>
@@ -72,4 +81,4 @@ const Content = (): JSX.Element => {
   );
 };
 
-export default Content;
+export default AddFriend;
