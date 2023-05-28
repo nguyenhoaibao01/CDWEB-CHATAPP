@@ -57,7 +57,6 @@ const ModelOption = (props): JSX.Element => {
   const modalData = useAppSelector((state) => state.general.modelData);
   const { visible, data } = modalData;
   const generator = new AvatarGenerator();
-  console.log(data);
   const listUser = useAppSelector((state) => state.auth.listUser) || [];
   const userOfRom = useAppSelector((state) => state.auth.userOfRom) || [];
   const [listNotMember, setListNotMember] = useState([]);
@@ -73,7 +72,6 @@ const ModelOption = (props): JSX.Element => {
   };
 
   const handleChange = (value: string[]) => {
-    // console.log(`selected ${value}`);
   };
 
   useEffect(() => {

@@ -6,6 +6,12 @@ import {
   getMessages,
   getMessagesSuccess,
   getMessagesError,
+  requestPinMessages,
+  requestPinMessagesSuccess,
+  requestPinMessagesError,
+  requestUnPinMessages,
+  requestUnPinMessagesSuccess,
+  requestUnPinMessagesError
 } from "providers/MessengerProvider/slice";
 import { callApi } from "providers/GeneralProvider/saga";
 import api from "utils/service";
@@ -21,7 +27,38 @@ export function* handleGetMessages(action: any) {
     yield put(getMessagesError(error.message));
   }
 }
+export function* handleRequestPinMessages(action: any) {
+  console.log(action.payload);
+
+  try {
+    const { data } = yield callApi(
+      api.put,
+      `rooms/${action.payload.romId}/messages/${action.payload.id}/pin`,
+      { pin: action.payload.pin }
+    );
+    yield put(requestPinMessagesSuccess(data));
+  } catch (error) {
+    yield put(requestPinMessagesError(error.message));
+  }
+}
+export function* handleRequestUnPinMessages(action: any) {
+  console.log(action.payload);
+
+  try {
+    const { data } = yield callApi(
+      api.put,
+      `rooms/${action.payload.romId}/messages/${action.payload.id}/unpin`,
+      { pin: action.payload.pin }
+    );
+    yield put(requestUnPinMessagesSuccess(data));
+  } catch (error) {
+    yield put(requestUnPinMessagesError(error.message));
+  }
+}
 
 export default function* watchMessages(): Generator {
   yield takeEvery(getMessages.type, handleGetMessages);
+  yield takeEvery(requestPinMessages.type, handleRequestPinMessages);
+  yield takeEvery(requestUnPinMessages.type, handleRequestUnPinMessages);
+
 }

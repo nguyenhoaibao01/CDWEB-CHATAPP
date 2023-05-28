@@ -156,8 +156,6 @@ export function* handleRequestAddMember(action: any) {
   }
 }
 export function* handleGetUserOfRom(action: any) {
-  console.log(action.payload.roomId, 'kkkkk');
-
   try {
     const { data } = yield callApi(
       api.get,
@@ -170,8 +168,6 @@ export function* handleGetUserOfRom(action: any) {
   }
 }
 export function* handleDeleteMember(action: any) {
-  console.log(action.payload.roomId, 'kkkkk');
-
   try {
     const { data } = yield callApi(
       api.delete,

@@ -45,6 +45,7 @@ import {
   const ModelOption = (props): JSX.Element => {
     const modelAccept = useAppSelector((state) => state.general.modelAccept);
     const { visible, data } = modelAccept;
+    
     const generator = new AvatarGenerator();  
     const dispatch = useAppDispatch();
     const handleCancel = (value: boolean) => {
