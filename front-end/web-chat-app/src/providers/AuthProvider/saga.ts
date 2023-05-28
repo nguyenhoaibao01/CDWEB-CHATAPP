@@ -41,6 +41,9 @@ import {
   deleteMember,
   deleteMemberSuccess,
   deleteMemberError,
+  updateProfileSuccess,
+  updateProfileError,
+  updateProfile,
 } from "providers/AuthProvider/slice";
 import { callApi } from "providers/GeneralProvider/saga";
 import api from "utils/service";
@@ -179,6 +182,15 @@ export function* handleDeleteMember(action: any) {
     yield put(deleteMemberError(error));
   }
 }
+export function* handleUpdateProfile(action: any) {
+  try {
+    const { data } = yield callApi(api.put, `users/me/update`, action.payload);
+    yield put(updateProfileSuccess(data));
+  } catch (error) {
+    console.log(error);
+    yield put(updateProfileError(error));
+  }
+}
 
 export default function* watchAuth(): Generator {
   yield takeLeading(registerRequest.type, handleRegisterRequest);
@@ -194,5 +206,5 @@ export default function* watchAuth(): Generator {
   yield takeEvery(requestAddMember.type, handleRequestAddMember);
   yield takeEvery(getUserOfRom.type, handleGetUserOfRom);
   yield takeEvery(deleteMember.type, handleDeleteMember);
-
+  yield takeEvery(updateProfile.type, handleUpdateProfile);
 }

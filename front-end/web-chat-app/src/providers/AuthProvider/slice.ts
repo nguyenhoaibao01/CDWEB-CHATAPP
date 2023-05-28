@@ -214,6 +214,15 @@ const authSlice = createSlice({
     },
     deleteMemberError(state, action){
       return { ...state, isLoading: false };
+    },
+    updateProfile(state, action){
+      return { ...state, isLoading: false };
+    },
+    updateProfileSuccess(state, action){
+      return { ...state, isLoading: false };
+    },
+    updateProfileError(state, action){
+      return { ...state, isLoading: false };
     }
   },
 });
@@ -257,6 +266,9 @@ export const {
   deleteMember,
   deleteMemberSuccess,
   deleteMemberError,
+  updateProfileSuccess,
+  updateProfileError,
+  updateProfile
 } = authSlice.actions;
 
 export default authSlice.reducer;
