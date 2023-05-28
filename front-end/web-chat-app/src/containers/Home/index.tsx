@@ -4,20 +4,19 @@ import { useHistory } from "react-router-dom";
 import { AvatarGenerator } from "random-avatar-generator";
 import { over } from "stompjs";
 import SockJS from "sockjs-client";
-import Editor from "./Editor";
 import ContentChat from "./Content/content";
 import ModelAddGroup from "./Content/ModelAddGroup";
 import AddFriend from "./Content/AddFriend";
 import ModelAcceptFriend from "./Content/ModelAcceptFriend";
 import WelComePage from "./Content/Welcome";
 import Helper from "utils/Helper";
-import moment from "moment";
 import {
   CaretLeftOutlined,
   CaretRightOutlined,
   GlobalOutlined,
   UserOutlined,
   PlusSquareOutlined,
+  SendOutlined,
 } from "@ant-design/icons";
 import {
   Layout,
@@ -45,7 +44,7 @@ import {
   getAllUser,
   getAllRoom,
 } from "providers/AuthProvider/slice";
-import { getMessages } from "providers/MessengerProvider/slice";
+import { getMessages, setUserData } from "providers/MessengerProvider/slice";
 import { useAppSelector } from "store";
 import { debounce } from "lodash";
 import { useParams } from "react-router-dom";
@@ -77,14 +76,14 @@ const Home = (): JSX.Element => {
   const { Search } = Input;
   const dispatch = useDispatch();
   const { Panel } = Collapse;
-  const [connected, setConnected] = useState(false);
+  const [connected, setConnected] = useState<any>({});
   const [collapsed, setCollapsed] = useState(false);
   const [listRomOfUser, setListRomOfUser] = useState<any>([]);
   const [listGroup, setListGroup] = useState<any>([]);
   const [rom, setRom] = useState<any>({});
   const [isAddFriend, setIsAddFriend] = useState<boolean>(false);
   const [idFriend, setIdFriend] = useState<string>("");
-  const [privateChats, setPrivateChats] = useState(new Map());
+  const [privateChats, setPrivateChats] = useState<any>(new Map());
   const {
     token: { colorBgContainer },
   } = theme.useToken();
@@ -92,14 +91,17 @@ const Home = (): JSX.Element => {
   const listUser = useAppSelector((state) => state.auth.listUser) || [];
   const listRoms = useAppSelector((state) => state.auth.listRoms) || [];
   const userSearch = useAppSelector((state) => state.auth.userSearch) || {};
+  const listMessages =
+    useAppSelector((state) => state.messages.listMessages) || [];
+  const [publicChats, setPublicChats] = useState<any>(listMessages);
   const listFriendRequest =
     useAppSelector((state) => state.auth.listFriendRequest) || [];
-
+  const [tab, setTab] = useState("CHATROOM");
   const onChange = (key: string | string[]) => {};
   const openModel = (data: any) => {
     dispatch(setModelData({ visible: true, data }));
   };
-
+  const [text, setText] = useState("");
   const showModelAcceptFriend = (data: any) => {
     dispatch(setFormModal({ visible: true, data }));
   };
@@ -187,48 +189,40 @@ const Home = (): JSX.Element => {
 
   const onConnected = () => {
     console.log(stompClient.connected, "iiii");
-    stompClient.subscribe(
-      `http://localhost:8080/room/${idRoom}`,
-      onChatMessages
-    );
+    stompClient.subscribe(`/room/${idRoom}`, onPrivateMessage);
     setConnected(stompClient);
-    userJoin();
   };
 
   const onError = (err: any) => {
     console.log(err);
   };
-  const onChatMessages = (payload: any) => {
-    console.log("ahi hi", payload);
-    var payloadData: any = JSON.parse(payload);
-    if (privateChats.get(payloadData.senderName)) {
-      privateChats.get(payloadData.senderName).push(payloadData);
-      setPrivateChats(new Map(privateChats));
-    } else {
-      let list:any = [];
-      list.push(payloadData);
-      privateChats.set(payloadData.senderName, list);
-      setPrivateChats(new Map(privateChats));
+  const onPrivateMessage = (payload) => {
+    console.log(payload);
+    setTimeout(() => {
+      dispatch(getMessages(idRoom));
+    }, 500);
+  };
+ 
+  const sendMessages = () => {
+    console.log(connected);
+
+    if (connected && text !== "") {
+      let chatMessage = {
+        sender: profileUser.email,
+        content: text,
+        replyId: "1",
+        messageType: "MESSAGE",
+        roomId: idRoom,
+      };
+      connected.send(`/app/chat/${idRoom}`, {}, JSON.stringify(chatMessage));
       console.log(privateChats);
-      
+      setText("");
     }
   };
-  const userJoin = () => {
-    // console.log("hhh");
-    // var chatMessage = {
-    //   sender: profileUser?.email,
-    //   roomId: idRoom,
-    // };
-    // console.log(chatMessage);
-    // stompClient.send(
-    //   `/app/chat/${idRoom}`,
-    //   {},
-    //   JSON.stringify(chatMessage)
-    // );
-    // var chatMessage = {
-    //   senderName: userData.username,
-    //   status:"JOIN"
-    // };
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      sendMessages();
+    }
   };
   return (
     <Layout>
@@ -350,7 +344,7 @@ const Home = (): JSX.Element => {
           </div>
         </Header>
         <Content
-          className="h-full overflow-hidden"
+          className="h-full py-2 overflow-hidden"
           style={{
             margin: "16px 16px",
             background: colorBgContainer,
@@ -368,7 +362,27 @@ const Home = (): JSX.Element => {
                 <ModelAddGroup listUser={listUser} />
                 <ModelAcceptFriend />
               </div>
-              <Editor stompClient={connected} sender={profileUser} rom={rom} />
+              <div className="h-full">
+                <div className="editor flex w-full mt-auto px-5">
+                  <input
+                    className="w-full h-12 rounded-xl border-2 border-indigo-900"
+                    type="text"
+                    id="header"
+                    value={text}
+                    onChange={(event) => {
+                      const data = event.target.value;
+                      setText(data);
+                    }}
+                    onKeyDown={handleKeyDown}
+                  />
+                  <button
+                    className="h-12 w-12 mx-2 flex justify-center items-center text-indigo-700 rounded-xl bg-blue-300"
+                    onClick={sendMessages}
+                  >
+                    <SendOutlined />
+                  </button>
+                </div>
+              </div>
             </div>
           ) : (
             <WelComePage />

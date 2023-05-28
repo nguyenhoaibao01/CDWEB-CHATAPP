@@ -40,7 +40,7 @@ interface UserItem {
     thumbnail: string;
   };
 }
-const ContainerHeight = 665;
+const ContainerHeight = 691;
 
 const Content = (props: any): JSX.Element => {
   const params: any = useParams();
@@ -188,8 +188,7 @@ const Content = (props: any): JSX.Element => {
                 }
                 id={item.id}
                 key={item?.email}
-                // onMouseOut={() => handleShow(item)}
-                onMouseOver={() => handleShow(item)}
+                onClick={() => handleShow(item)}
                 onMouseLeave={() => setIsShow(false)}
               >
                 <List.Item.Meta

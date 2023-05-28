@@ -5,11 +5,25 @@ import { createSlice } from "@reduxjs/toolkit";
 export interface MessengerState {
   listMessages: any;
   statusPin: string;
+  setUserDatas: {
+    sender: string;
+    content: string;
+    replyId: string;
+    messageType: string;
+    roomId: string;
+  };
 }
 
 const initialState = {
   listMessages: [],
-  statusPin: 'unPin',
+  statusPin: "unPin",
+  setUserDatas: {
+    sender: "",
+    content: "",
+    replyId: "",
+    messageType: "",
+    roomId: "",
+  },
 } as MessengerState;
 
 const messengerSlice = createSlice({
@@ -35,13 +49,13 @@ const messengerSlice = createSlice({
       console.log(action.payload);
       return {
         ...state,
-        statusPin:'Pinning'
+        statusPin: "Pinning",
       };
     },
     requestPinMessagesSuccess(state, action) {
       return {
         ...state,
-        statusPin:'Pinned'
+        statusPin: "Pinned",
       };
     },
     requestPinMessagesError(state, action) {
@@ -52,13 +66,13 @@ const messengerSlice = createSlice({
     requestUnPinMessages(state, action) {
       return {
         ...state,
-        statusPin:'Pinning'
+        statusPin: "Pinning",
       };
     },
     requestUnPinMessagesSuccess(state, action) {
       return {
         ...state,
-        statusPin:'Pinned'
+        statusPin: "Pinned",
       };
     },
     requestUnPinMessagesError(state, action) {
@@ -66,7 +80,19 @@ const messengerSlice = createSlice({
         ...state,
       };
     },
-    
+
+    setUserData(state, action) {
+      return {
+        ...state,
+        setUserDatas: {
+          sender: action.payload.sender,
+          content: action.payload.content,
+          replyId: action.payload.replyId,
+          messageType: action.payload.messageType,
+          roomId: action.payload.romId,
+        },
+      };
+    },
   },
 });
 
@@ -79,6 +105,7 @@ export const {
   requestPinMessagesError,
   requestUnPinMessages,
   requestUnPinMessagesSuccess,
-  requestUnPinMessagesError
+  requestUnPinMessagesError,
+  setUserData
 } = messengerSlice.actions;
 export default messengerSlice.reducer;
