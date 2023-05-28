@@ -10,6 +10,10 @@ import AddFriend from "./Content/AddFriend";
 import ModelAcceptFriend from "./Content/ModelAcceptFriend";
 import WelComePage from "./Content/Welcome";
 import Helper from "utils/Helper";
+import { storage } from "utils/firebase";
+import { ref, uploadBytes } from "firebase/storage";
+import { v4 } from "uuid";
+import { getDownloadURL } from "firebase/storage";
 import {
   CaretLeftOutlined,
   CaretRightOutlined,
@@ -17,6 +21,7 @@ import {
   UserOutlined,
   PlusSquareOutlined,
   SendOutlined,
+  CloseOutlined,
 } from "@ant-design/icons";
 import {
   Layout,
@@ -208,24 +213,18 @@ const Home = (): JSX.Element => {
   const sendMessages = () => {
     console.log(text);
 
-    if (connected && text !== "") {
+    if ((connected && text !== "") || (connected && urlImage !== "")) {
+      console.log(urlImage);
+      
       let chatMessage = {
         sender: profileUser.email,
-        content: text,
+        content: urlImage ? urlImage : text,
         replyId: "1",
-        messageType: "MESSAGE",
+        messageType: urlImage ? "FILE" : "MESSAGE",
         roomId: idRoom,
       };
       connected.send(`/app/chat/${idRoom}`, {}, JSON.stringify(chatMessage));
       form.resetFields();
-      setText("");
-      chatMessage = {
-        sender: "",
-        content: "",
-        replyId: "",
-        messageType: "",
-        roomId: "",
-      };
     }
   };
   const handleKeyDown = (event) => {
@@ -238,6 +237,33 @@ const Home = (): JSX.Element => {
     const data = event.target.value;
     setText(data);
     console.log(data);
+  };
+  const [imageUpload, setImageUpload] = useState<any>(null);
+  const [urlImage, setUrlImage] = useState<any>(null);
+
+  const handleFileChange = (e) => {
+    setImageUpload(e.target.files[0]);
+  };
+  const uploadImage = () => {
+    if (imageUpload !== null) {
+      const imageRef = ref(storage, `images/${imageUpload.name + v4()}`);
+      console.log(imageUpload.name);
+      uploadBytes(imageRef, imageUpload).then(() => {
+        getDownloadURL(imageRef).then((url) => {
+          console.log(url);
+          setUrlImage(url);
+        });
+      });
+    } else return;
+  };
+  useEffect(() => {
+    if (imageUpload) {
+      uploadImage();
+    }
+  }, [imageUpload]);
+
+  const handleRemoveImage = () => {
+    setUrlImage("");
   };
   return (
     <Layout>
@@ -379,6 +405,30 @@ const Home = (): JSX.Element => {
               </div>
               <div className="h-full">
                 <Form form={form} className="w-full">
+                  <Form.Item className="w-24 h-full">
+                    <div className=" w-full h-full justify-start">
+                      <input
+                        className=""
+                        type="file"
+                        onChange={handleFileChange}
+                      />
+                    </div>
+                  </Form.Item>
+                  {urlImage && (
+                    <Form.Item>
+                      <div className="px-10">
+                        <div className="max-h-24 w-24 relative">
+                          <img className="h-16" src={urlImage} />
+                          <button
+                            onClick={handleRemoveImage}
+                            className="bg-white rounded-md top-0 right-0 py-0 px-1 absolute"
+                          >
+                            <CloseOutlined />
+                          </button>
+                        </div>
+                      </div>
+                    </Form.Item>
+                  )}
                   <div className="editor flex w-full mt-auto px-5">
                     <Form.Item name="text" className="w-full">
                       <input
@@ -389,6 +439,7 @@ const Home = (): JSX.Element => {
                         onKeyDown={handleKeyDown}
                       />
                     </Form.Item>
+
                     <Form.Item>
                       <button
                         className="h-12 w-12 mx-2 flex justify-center items-center text-indigo-700 rounded-xl bg-blue-300"
