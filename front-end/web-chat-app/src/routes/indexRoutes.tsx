@@ -8,6 +8,8 @@ import ForgotPassword from "containers/Authencation/ForgotPassword";
 // import Home from "containers/Home/index"
 
 const Home = lazy(() => import("containers/Home"));
+const Profile = lazy(() => import("containers/Profile"));
+
 
 const NotFoundRedirect = (): JSX.Element => <Redirect to="/404-not-found" />;
 
@@ -45,6 +47,11 @@ const indexRoutes = [
   {
     path: "/home",
     component: Home,
+    exact: true,
+  },
+  {
+    path: "/profile",
+    component: Profile,
     exact: true,
   },
   {

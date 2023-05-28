@@ -127,8 +127,8 @@ const Home = (): JSX.Element => {
     },
   ];
   const onClick: MenuProps["onClick"] = ({ key }) => {
-    if (key === "1") {
-      openModel(profileUser);
+    if (key === "1") {    
+        history.push("/profile");
     } else {
       localStorage.clear();
       history.push("/login");
