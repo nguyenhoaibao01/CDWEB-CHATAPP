@@ -29,6 +29,7 @@ import {
   Space,
   Select,
   MenuProps,
+  Form,
 } from "antd";
 import logo from "../../assets/images/logo.png";
 import "./style.css";
@@ -105,6 +106,7 @@ const Home = (): JSX.Element => {
   const showModelAcceptFriend = (data: any) => {
     dispatch(setFormModal({ visible: true, data }));
   };
+  const [form] = Form.useForm();
 
   const openModelGroup = (data: any) => {
     dispatch(setConfirmModal({ visible: true, data: data }));
@@ -202,9 +204,9 @@ const Home = (): JSX.Element => {
       dispatch(getMessages(idRoom));
     }, 500);
   };
- 
+
   const sendMessages = () => {
-    console.log(connected);
+    console.log(text);
 
     if (connected && text !== "") {
       let chatMessage = {
@@ -215,14 +217,27 @@ const Home = (): JSX.Element => {
         roomId: idRoom,
       };
       connected.send(`/app/chat/${idRoom}`, {}, JSON.stringify(chatMessage));
-      console.log(privateChats);
+      form.resetFields();
       setText("");
+      chatMessage = {
+        sender: "",
+        content: "",
+        replyId: "",
+        messageType: "",
+        roomId: "",
+      };
     }
   };
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
       sendMessages();
     }
+  };
+
+  const handleMessage = (event) => {
+    const data = event.target.value;
+    setText(data);
+    console.log(data);
   };
   return (
     <Layout>
@@ -363,25 +378,27 @@ const Home = (): JSX.Element => {
                 <ModelAcceptFriend />
               </div>
               <div className="h-full">
-                <div className="editor flex w-full mt-auto px-5">
-                  <input
-                    className="w-full h-12 rounded-xl border-2 border-indigo-900"
-                    type="text"
-                    id="header"
-                    value={text}
-                    onChange={(event) => {
-                      const data = event.target.value;
-                      setText(data);
-                    }}
-                    onKeyDown={handleKeyDown}
-                  />
-                  <button
-                    className="h-12 w-12 mx-2 flex justify-center items-center text-indigo-700 rounded-xl bg-blue-300"
-                    onClick={sendMessages}
-                  >
-                    <SendOutlined />
-                  </button>
-                </div>
+                <Form form={form} className="w-full">
+                  <div className="editor flex w-full mt-auto px-5">
+                    <Form.Item name="text" className="w-full">
+                      <input
+                        className="w-full h-12 rounded-xl border-2 border-indigo-900"
+                        type="text"
+                        id="chat-messages"
+                        onChange={debounce(handleMessage, 500)}
+                        onKeyDown={handleKeyDown}
+                      />
+                    </Form.Item>
+                    <Form.Item>
+                      <button
+                        className="h-12 w-12 mx-2 flex justify-center items-center text-indigo-700 rounded-xl bg-blue-300"
+                        onClick={sendMessages}
+                      >
+                        <SendOutlined />
+                      </button>
+                    </Form.Item>
+                  </div>
+                </Form>
               </div>
             </div>
           ) : (
