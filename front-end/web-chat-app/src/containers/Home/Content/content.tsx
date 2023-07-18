@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Avatar, List, Card, Dropdown, MenuProps, Space, message } from "antd";
+import {
+  Avatar,
+  List,
+  Input,
+  Card,
+  Dropdown,
+  MenuProps,
+  Space,
+  message,
+} from "antd";
 import {
   CaretDownOutlined,
   UserAddOutlined,
@@ -8,6 +17,8 @@ import {
   EditOutlined,
   DeleteOutlined,
   CloseOutlined,
+  SearchOutlined,
+  FileOutlined,
 } from "@ant-design/icons";
 import { setModelData } from "providers/GeneralProvider/slice";
 import { useDispatch } from "react-redux";
@@ -18,12 +29,14 @@ import {
   requestPinMessages,
   getMessages,
   requestUnPinMessages,
+  searchMessages,
 } from "providers/MessengerProvider/slice";
 import Helper from "utils/Helper";
 import { useAppSelector } from "store";
 import moment from "moment";
 import "../style.css";
 import { useParams } from "react-router-dom";
+import { debounce } from "lodash";
 
 interface UserItem {
   email: string;
@@ -40,8 +53,8 @@ interface UserItem {
     thumbnail: string;
   };
 }
-const ContainerHeight = 691;
-
+const ContainerHeight = 550;
+const { Search } = Input;
 const Content = (props: any): JSX.Element => {
   const params: any = useParams();
   const idRoom = params.id;
@@ -84,6 +97,7 @@ const Content = (props: any): JSX.Element => {
   //     e.currentTarget.scrollHeight - e.currentTarget.scrollTop ===
   //     ContainerHeight
   //   ) {
+  //     return
   //   }
   // };
   const openProfile = (data: any) => {
@@ -114,6 +128,27 @@ const Content = (props: any): JSX.Element => {
       requestUnPinMessages({ romId: idRoom, id: messagePin.id, pin: false })
     );
   };
+
+  const [valueSearch, setValueSearch] = useState("");
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      handleFindMessages();
+    }
+  };
+  const handleFindMessages = () => {
+    if (valueSearch !== "") {
+      dispatch(searchMessages({ content: valueSearch, idRoom: idRoom }));
+    } else {
+      dispatch(getMessages(idRoom));
+    }
+  };
+
+  const handleSearchMessage = (e: any) => {
+    setValueSearch(e.target.value);
+    if (e.target.value === "") {
+      dispatch(getMessages(idRoom));
+    }
+  };
   return (
     <div className="w-full h-full content">
       <div className="py-3 px-5 flex justify-between items-center w-full border-b border-slate-400 ">
@@ -136,6 +171,25 @@ const Content = (props: any): JSX.Element => {
             </span>
           )}
           <CaretDownOutlined />
+        </div>
+        <div className="w-1/3">
+          <div className="editor flex w-full mt-auto px-5">
+            <input
+              className="w-full rounded-xl border-2 border-indigo-900"
+              type="text"
+              id="chat-messages"
+              placeholder="Search messages..."
+              onChange={debounce(handleSearchMessage, 500)}
+              onKeyDown={handleKeyDown}
+            />
+
+            <button
+              className="h-12 w-16 mx-2 flex justify-center items-center text-indigo-700 rounded-xl bg-blue-300"
+              onClick={handleFindMessages}
+            >
+              <SearchOutlined className="text-lg" />
+            </button>
+          </div>
         </div>
       </div>
       <div className="border-b border-gray-200 w-full py-2">
@@ -177,7 +231,6 @@ const Content = (props: any): JSX.Element => {
           <VirtualList
             data={listMessages}
             height={ContainerHeight}
-            itemHeight={80}
             itemKey="email"
             // onScroll={onScroll}
           >
@@ -198,7 +251,22 @@ const Content = (props: any): JSX.Element => {
                     />
                   }
                   title={<a>{item?.sender?.email}</a>}
-                  description={`${item?.content}`}
+                  description={
+                    item.messageType === "MESSAGE" ? (
+                      <span>{item?.content}</span>
+                    ) : item.messageType === "IMAGE" ? (
+                      <img className="w-36 h-36" src={item.content} />
+                    ) : (
+                      <a href={item.content}>
+                        <button
+                          className="rounded-md border p-3 text-white bg-teal-300
+                      "
+                        >
+                          <FileOutlined />
+                        </button>
+                      </a>
+                    )
+                  }
                 />
                 <p className="text-xs text-gray-400">
                   {moment(item.sendAt).format("hh:mm A - MM/DD/YYYY")}

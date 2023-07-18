@@ -219,9 +219,11 @@ const authSlice = createSlice({
       return { ...state, isLoading: false };
     },
     updateProfileSuccess(state, action){
+      message.success("Update profile success")
       return { ...state, isLoading: false };
     },
     updateProfileError(state, action){
+      message.warning("Update profile error")
       return { ...state, isLoading: false };
     }
   },

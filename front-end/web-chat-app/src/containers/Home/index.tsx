@@ -89,6 +89,7 @@ const Home = (): JSX.Element => {
   const [rom, setRom] = useState<any>({});
   const [isAddFriend, setIsAddFriend] = useState<boolean>(false);
   const [idFriend, setIdFriend] = useState<string>("");
+  const [typeMessages, setTypeMessages] = useState<string>("");
   const [privateChats, setPrivateChats] = useState<any>(new Map());
   const {
     token: { colorBgContainer },
@@ -127,8 +128,8 @@ const Home = (): JSX.Element => {
     },
   ];
   const onClick: MenuProps["onClick"] = ({ key }) => {
-    if (key === "1") {    
-        history.push("/profile");
+    if (key === "1") {
+      history.push("/profile");
     } else {
       localStorage.clear();
       history.push("/login");
@@ -215,12 +216,12 @@ const Home = (): JSX.Element => {
 
     if ((connected && text !== "") || (connected && urlImage !== "")) {
       console.log(urlImage);
-      
+
       let chatMessage = {
         sender: profileUser.email,
         content: urlImage ? urlImage : text,
         replyId: "1",
-        messageType: urlImage ? "FILE" : "MESSAGE",
+        messageType: urlImage ? typeMessages : "MESSAGE",
         roomId: idRoom,
       };
       connected.send(`/app/chat/${idRoom}`, {}, JSON.stringify(chatMessage));
@@ -246,6 +247,12 @@ const Home = (): JSX.Element => {
   };
   const uploadImage = () => {
     if (imageUpload !== null) {
+      const fileImage = ["jpeg", "jpg", "png", "jfif"];
+      if (fileImage.includes(imageUpload?.name?.split(".")[1])) {
+        setTypeMessages("IMAGE");
+      } else {
+        setTypeMessages("FILE");
+      }
       const imageRef = ref(storage, `images/${imageUpload.name + v4()}`);
       console.log(imageUpload.name);
       uploadBytes(imageRef, imageUpload).then(() => {
@@ -375,6 +382,7 @@ const Home = (): JSX.Element => {
               <Dropdown menu={{ items, onClick }}>
                 <a>
                   <Space>
+                    {profileUser.email}
                     <Avatar
                       src={generator.generateRandomAvatar(profileUser?.email)}
                     />
@@ -408,6 +416,7 @@ const Home = (): JSX.Element => {
                   <Form.Item className="w-24 h-full">
                     <div className=" w-full h-full justify-start">
                       <input
+                        accept=".jpg, .jpeg, .png, .pdf, .txt, .docx"
                         className=""
                         type="file"
                         onChange={handleFileChange}
@@ -435,6 +444,7 @@ const Home = (): JSX.Element => {
                         className="w-full h-12 rounded-xl border-2 border-indigo-900"
                         type="text"
                         id="chat-messages"
+                        placeholder="Enter messages..."
                         onChange={debounce(handleMessage, 500)}
                         onKeyDown={handleKeyDown}
                       />

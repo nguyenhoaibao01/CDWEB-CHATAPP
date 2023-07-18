@@ -19,7 +19,7 @@ import {
   resetConfirmModal,
 } from "providers/GeneralProvider/slice";
 import { AvatarGenerator } from "random-avatar-generator";
-import { requestCreateGroup } from "providers/AuthProvider/slice";
+import { requestCreateGroup, getAllRoom } from "providers/AuthProvider/slice";
 const ModelAddGroup = (props: any): JSX.Element => {
   const { Option } = Select;
   const modalData = useAppSelector((state) => state.general.confirmModal);
@@ -36,11 +36,11 @@ const ModelAddGroup = (props: any): JSX.Element => {
     dispatch(setConfirmModal({ visible: false, data: data }));
   };
 
-  const handleChange = (value: string[]) => {
-  };
+  const handleChange = (value: string[]) => {};
   const handleSubmit = (value: any) => {
     dispatch(requestCreateGroup(value));
-
+    dispatch(setConfirmModal({ visible: false, data: data }));
+    dispatch(getAllRoom());
   };
   return (
     <>
@@ -91,8 +91,12 @@ const ModelAddGroup = (props: any): JSX.Element => {
               style={{ maxWidth: 600 }}
             >
               {props.listUser.length &&
-                props.listUser?.map((item: any, index:number) => {
-                  return <Option key={index} value={item?.email}>{item?.email}</Option>;
+                props.listUser?.map((item: any, index: number) => {
+                  return (
+                    <Option key={index} value={item?.email}>
+                      {item?.email}
+                    </Option>
+                  );
                 })}
             </Select>
           </Form.Item>

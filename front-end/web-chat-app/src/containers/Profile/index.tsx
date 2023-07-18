@@ -15,7 +15,7 @@ import {
   Avatar,
   Card,
 } from "antd";
-import { updateProfile } from "providers/AuthProvider/slice";
+import { updateProfile , getProfile} from "providers/AuthProvider/slice";
 import React, { useState, useEffect } from "react";
 import { useAppSelector } from "store";
 import logo from "assets/images/logo.png";
@@ -63,8 +63,11 @@ const FormDisabledDemo: React.FC = () => {
       address: data.address,
     };
     dispatch(updateProfile(body));
-    console.log(data);
+    dispatch(getProfile());
   };
+  useEffect(()=>{
+    dispatch(getProfile());
+  },[])
   return (
     <div className="bg-blue-900 px-5 py-5 w-full flex justify-center item-center">
       <Card className="w-4/12 py-5 px-3">

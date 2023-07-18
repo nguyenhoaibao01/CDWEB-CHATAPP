@@ -184,7 +184,7 @@ export function* handleDeleteMember(action: any) {
 }
 export function* handleUpdateProfile(action: any) {
   try {
-    const { data } = yield callApi(api.put, `users/me/update`, action.payload);
+    const { data } = yield callApi(api.put, 'users/me/update', action.payload);
     yield put(updateProfileSuccess(data));
   } catch (error) {
     console.log(error);

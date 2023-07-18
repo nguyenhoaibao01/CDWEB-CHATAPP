@@ -93,6 +93,15 @@ const messengerSlice = createSlice({
         },
       };
     },
+    searchMessages(state, action) {
+      return { ...state };
+    },
+    searchMessagesSuccess(state, action) {
+      return { ...state, listMessages: action.payload };
+    },
+    searchMessagesError(state, action) {
+      return { ...state };
+    },
   },
 });
 
@@ -106,6 +115,9 @@ export const {
   requestUnPinMessages,
   requestUnPinMessagesSuccess,
   requestUnPinMessagesError,
-  setUserData
+  setUserData,
+  searchMessages,
+  searchMessagesError,
+  searchMessagesSuccess,
 } = messengerSlice.actions;
 export default messengerSlice.reducer;
